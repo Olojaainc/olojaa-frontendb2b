@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background: radial-gradient(50% 50% at 50% 50%, #F4F5FE 0%, #FFEDE1 51%, #F4F6F7 100%), url('./Background.svg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: auto;
+            padding: 10px 32px;
+            display: flex;
+            flex-direction: column;
+            width: 70%;
+        }
+        .logo {
+            margin-bottom: 28px;
+            width: 138px;
+            height: 40px;
+        }
+        .heading {
+            font-weight: 600;
+            margin-bottom: 64px;
+            font-size: 1.25rem;
+        }
+        .text-sm {
+            font-size: 0.875rem;
+        }
+        .text-base {
+            font-size: 1rem;
+        }
+        .font-medium {
+            font-weight: 500;
+        }
+        .font-semibold {
+            font-weight: 600;
+        }
+        .button {
+            background-color: #FF6A00;
+            width: 120px;
+            height: 45px;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+        }
+        .divider {
+            width: 100%;
+            margin: 20px 0;
+            border-top: 1px solid #ccc;
+        }
+        .delivery-address {
+            border: 1px solid #ddd;
+            padding: 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+        .table {
+            width: 100%;
+            text-align: left;
+            font-size: 0.875rem;
+            margin-bottom: 40px;
+            border-collapse: collapse;
+        }
+        .table th {
+            border-bottom: 1px solid #ccc;
+            padding: 8px 16px;
+        }
+        .table td {
+            padding: 8px 16px;
+        }
+        .total {
+            display: flex;
+            flex-direction: column;
+            justify-content: 'center';
+            width: 82%;
+            margin-right: auto;
+        }
+        .total-label {
+            text-align: right;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .sub-heading-text{
+            color: #374151;
+            margin-bottom: 30px;
+        }
+        .total-amount {
+            background: white;
+            justify-self: 'center';
+            padding: 20px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: right;
+        }
+        .footer {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+        .footer-logo {
+            width: 138px;
+            height: 40px;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: space-between;
+            width: 15%;
+        }
+        .social-icon {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="logo" src="./logo.svg" alt="Logo" />
+        <h3 class="heading">Your order 13950 is arriving today!</h3>
+        <div>
+            <p class="text-sm font-medium sub-heading-text">Dear Oloyede,</p>
+            <p class="text-sm font-medium" style="width: 70%; margin-bottom: 20px; line-height: 25px;">We are glad to inform you that your order #281928 for 120KG Gas will be picked up in the next 40 minutes. It will be delivered back to you by the end of today.</p>
+            <button class="button">Track Order</button>
+        </div>
+        <hr class="divider" />
+        <div>
+            <p class="text-base font-medium sub-heading-text">Delivery Address</p>
+            <div class="delivery-address">
+                <p style="margin-bottom: 10px;">Kilimanjaro Restaurant</p>
+                <p>No 5, Arigidi Street, Gbogan road Ibadan</p>
+            </div>
+        </div>
+        <div>
+            <p class="text-base font-medium sub-heading-text" style="margin-top: 30px;">Order Details</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order Item(s)</th>
+                        <th>Quantity</th>
+                        <th>Price Per KG</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gas</td>
+                        <td>40KG</td>
+                        <td>#4500</td>
+                        <td>#450,000.00</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="total">
+                <p class="total-label">Grand Total</p>
+                <p class="total-amount">#450,0000.00</p>
+            </div>
+        </div>
+        <div>
+            <p class="text-base font-normal">Best Regards,</p>
+            <p class="text-xl font-medium">Team Olooja</p>
+            <p style="padding-top: 20px; color: #999999; font-size: 0.875rem;">This is a system generated message. Do not reply.</p>
+        </div>
+        <hr class="divider" />
+        <footer class="footer">
+            <div class="social-icons">
+                <img class="social-icon" src="facebook.svg" alt="Facebook Logo" />
+                <img class="social-icon" src="./twitter.svg" alt="Twitter Logo" />
+                <img class="social-icon" src="./linkedin.svg" alt="LinkedIn Logo" />
+            </div>
+            <img class="footer-logo" src="./logo.svg" alt="Logo" />
+            <div>
+                <p>Copyright © 2025 Olooja</p>
+                <p>The company tagline can be placed here @Sinmi.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
