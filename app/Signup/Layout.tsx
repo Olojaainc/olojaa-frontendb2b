@@ -6,7 +6,7 @@ export default function AuthLayout({
 }>) {
   return (
       <div
-        className={'bg-custom-radial bg-no-repeat bg-cover  w-full h-screen flex justify-center items-center'}
+        className={'bg-custom-radial bg-no-repeat bg-cover overflow-auto  w-full h-[100vh] flex justify-center items-center'}
       >
         {children}
       </div>
