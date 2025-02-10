@@ -1,3 +1,4 @@
+import { JWTPayload } from 'jose'
 export interface IUserRegistration{
     name: string;
     email: string;
@@ -10,4 +11,7 @@ export interface IUserRegistration{
 export interface ILoginDetails {
     email: string;
     password: string
+}
+export interface SessionPayload extends JWTPayload {
+    userId: string
 }

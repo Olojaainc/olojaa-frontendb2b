@@ -2,8 +2,9 @@
 import { SignupSchema, FormState, loginSchema } from '@/app/Auth/_lib/definitions';
 import { createSession, deleteSession } from '@/app/Auth/_lib/session';
 import { redirect } from 'next/navigation';
+import { ILoginDetails, IUserRegistration } from '../Types/Interfaces/IUser';
  
-export async function signup(state: FormState, formData: any) {
+export async function signup(state: FormState, formData: IUserRegistration) {
 	try {
   
 	  const validatedFields = SignupSchema.safeParse(formData);
@@ -51,7 +52,7 @@ export async function signup(state: FormState, formData: any) {
 	redirect('/Home');
   }
 
-export async function login(state: FormState, formData: any) {
+export async function login(state: FormState, formData: ILoginDetails) {
 	try {
 	  // Validate form fields
 	  const validatedFields = loginSchema.safeParse(formData);

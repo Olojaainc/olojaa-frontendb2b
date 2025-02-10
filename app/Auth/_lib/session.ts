@@ -1,11 +1,12 @@
 import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
+import { SessionPayload } from '@/app/Types/Interfaces/IUser'
  
 const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
  
-export async function encrypt(payload: any) {
+export async function encrypt(payload: SessionPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -20,7 +21,7 @@ export async function decrypt(session: string | undefined = '') {
     })
     return payload
   } catch (error) {
-    console.log('Failed to verify session')
+    console.log( error || 'Failed to verify session')
   }
 }
 
