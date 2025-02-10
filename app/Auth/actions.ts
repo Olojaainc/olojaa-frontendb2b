@@ -1,45 +1,99 @@
-import { SignupSchema, FormState, loginSchema } from '@/app/Auth/_lib/definitions'
+'use server'
+import { SignupSchema, FormState, loginSchema } from '@/app/Auth/_lib/definitions';
+import { createSession, deleteSession } from '@/app/Auth/_lib/session';
+import { redirect } from 'next/navigation';
  
-export async function signup(state: FormState, formData: FormData) {
-  // Validate form fields
-  const validatedFields = SignupSchema.safeParse({
-    name: formData.get('name'),
-    email: formData.get('email'),
-    password: formData.get('password'),
-    password_confirmation: formData.get('password_confirmation'),
-    address: formData.get('address'),
-    phone_number: formData.get('phone_number')
+export async function signup(state: FormState, formData: any) {
+	try {
+  
+	  const validatedFields = SignupSchema.safeParse(formData);
 
-  })
-
-
- 
-  // If any form fields are invalid, return early
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-    }
+	  if (!validatedFields.success) {
+		console.error("Validation errors:", validatedFields.error.flatten().fieldErrors);
+		return { errors: validatedFields.error.flatten().fieldErrors };
+	  }
+  
+	  const { name, email, password, address, phone_number } = validatedFields.data;
+  
+	  const res = await fetch('https://olojaa-backendb2b.onrender.com/api/v1/auth/register', {
+		method: 'POST',
+		headers: { 
+		  'Content-Type': 'application/json',
+		  'Accept': 'application/json'
+		},
+		body: JSON.stringify({
+		  name,
+		  email,
+		  password,
+		  password_confirmation: password,
+		  address,
+		  phone_number
+		}),
+	  });
+  
+	
+	  if (!res.ok) {
+		const errorResponse = await res.json();
+		return { message: errorResponse.message || "An error occurred while creating your account." };
+	  }
+  
+	  const user = await res.json();
+  
+	  await createSession(user.slug);
+  
+	} catch (error) {
+	  console.error("Unexpected signup error:", error);
+	  return {
+		message: 'Unexpected error occurred. Please try again.',
+	  };
+	}
+  
+	redirect('/Home');
   }
- 
-  // Call the provider or db to create a user...
+
+export async function login(state: FormState, formData: any) {
+	try {
+	  // Validate form fields
+	  const validatedFields = loginSchema.safeParse(formData);
+  
+	  if (!validatedFields.success) {
+		console.error("Validation errors:", validatedFields.error.flatten().fieldErrors);
+		return {
+		  errors: validatedFields.error.flatten().fieldErrors,
+		};
+	  }
+  
+	  const { email, password } = validatedFields.data;
+  
+	  const res = await fetch('https://olojaa-backendb2b.onrender.com/api/v1/auth/login', {
+		method: 'POST',
+		headers: { 
+		  'Content-Type': 'application/json',
+		  'Accept': 'application/json'
+		},
+		body: JSON.stringify({ email, password }),
+	  });
+  
+	  const user = await res.json();
+  
+	  if (!res.ok) {
+		return {
+		  message: user.message || 'Invalid credentials. Please try again.',
+		};
+	  }
+
+	  await createSession(user.slug);
+  
+	} catch (error) {
+	  console.error("Unexpected login error:", error);
+	  return {
+		message: 'Unexpected error occurred. Please try again.',
+	  };
+	}
+	redirect('/Home');
 }
-
-export async function login(state: FormState, formData: FormData) {
-  // Validate form fields
-  const validatedFields = loginSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-  })
-
-
  
-  // If any form fields are invalid, return early
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-    }
-  }
- 
-  // Call the provider or db to create a user...
-  console.log('djfjf',validatedFields);
+export async function logout() {
+  deleteSession()
+  redirect('/Login')
 }

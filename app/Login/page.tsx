@@ -1,29 +1,59 @@
-"use client";
+'use client'
 import Link from "next/link";
 import AuthLayout from "../Signup/Layout";
 import Image from "next/image";
-import { useActionState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { login } from "../Auth/actions";
+import { Alert } from 'antd';
 
 export default function Login() {
   const [state, action, pending] = useActionState(login, undefined);
+
+  const [formValues, setFormValues] = useState({
+      name: "",
+      address: "",
+      email: "",
+      phone_number: "",
+      password: "",
+      password_confirmation: "",
+    });
+  
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormValues((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      }));
+    };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+  
+      startTransition(() => {
+        action(formValues);
+      }); 
+    };
 
   const Login = [
     {
       label: "Email",
       name: "email",
       placeholder: "business@newday.com",
-      error: state?.errors.email,
+      error: state?.errors?.email,
     },
     {
       label: "Password",
       name: "password",
       placeholder: "Password",
-      error: state?.errors.password,
+      error: state?.errors?.password,
     },
   ];
   return (
     <AuthLayout>
+      {
+        state?.message && (
+          <Alert className="fixed top-6 w-72" message={state?.message} type="error" showIcon closable closeIcon />
+        )
+      }
       <div className="bg-white w-[464px] h-auto px-8 py-10 rounded-3xl shadow-lg">
         <div className="mb-8">
           <h3 className="font-bold text-xl mb-1"> Sign In</h3>
@@ -36,7 +66,7 @@ export default function Login() {
         </div>
 
         <div className="flex flex-col">
-          <form action={action}>
+          <form onSubmit={handleSubmit}>
             {Login.map((item, index) => (
               <div key={index} className="mb-4">
                 <label
@@ -51,7 +81,8 @@ export default function Login() {
                       id={item.name}
                       name={item.name}
                       type="text"
-                      // onChange={handleChange}
+                      value={formValues[item.name as keyof typeof formValues]}
+                      onChange={handleChange}
                       placeholder={item.placeholder}
                       className=" grow py-1.5 pl-1 text-base  text-[var(--gray-700)] placeholder:text-[var(--gray-300)] focus:outline-none sm:text-sm/6"
                     />
