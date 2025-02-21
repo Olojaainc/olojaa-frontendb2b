@@ -36,6 +36,20 @@ export const SignupSchema = z.object({
   
   })
 
+  export const changePasswordSchema = z.object({
+    email: z.string().email('Invalid email').trim(),
+    password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters long.' })
+    .trim(),
+    password_confirmation: z.string().trim(),
+    token: z.string().trim()
+  })
+  .refine((data) => data.password === data.password_confirmation, {
+    message: 'Passwords do not match.',
+    path: ['password_confirmation'],
+  });
+
   export type FormState =
   | {
       errors?: {

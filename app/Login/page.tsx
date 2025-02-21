@@ -51,7 +51,7 @@ export default function Login() {
     <AuthLayout>
       {
         state?.message && (
-          <Alert className="fixed top-6 w-72" message={state?.message} type="error" showIcon closable closeIcon />
+          <Alert className="fixed top-6 text-center w-72" message={state?.message} type="error" showIcon closable closeIcon />
         )
       }
       <div className="bg-white w-[464px] h-auto px-8 py-10 rounded-3xl shadow-lg">
@@ -76,7 +76,7 @@ export default function Login() {
                   {item.label}
                 </label>
                 <div className="mb-2">
-                  <div className=" w-[400px] rounded-xl shadow-sm  items-center border border-[var(--gray-200)] bg-white pl-3 ">
+                  <div className="shadow-sm  items-center bg-white ">
                     <input
                       id={item.name}
                       name={item.name}
@@ -84,7 +84,7 @@ export default function Login() {
                       value={formValues[item.name as keyof typeof formValues]}
                       onChange={handleChange}
                       placeholder={item.placeholder}
-                      className=" grow py-1.5 pl-1 text-base  text-[var(--gray-700)] placeholder:text-[var(--gray-300)] focus:outline-none sm:text-sm/6"
+                      className=" grow py-1.5 pl-1 text-base rounded-xl w-[400px]   border border-[var(--gray-200)]  text-[var(--gray-700)] placeholder:text-[var(--gray-300)] focus:outline-none sm:text-sm/6"
                     />
                   </div>
                 </div>

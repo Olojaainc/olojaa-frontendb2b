@@ -1,8 +1,8 @@
 'use server'
-import { SignupSchema, FormState, loginSchema } from '@/app/Auth/_lib/definitions';
+import { SignupSchema, FormState, loginSchema, changePasswordSchema } from '@/app/Auth/_lib/definitions';
 import { createSession, deleteSession } from '@/app/Auth/_lib/session';
 import { redirect } from 'next/navigation';
-import { ILoginDetails, IUserRegistration } from '../Types/Interfaces/IUser';
+import { IChangePassword, ILoginDetails, IUserRegistration } from '../Types/Interfaces/IUser';
  
 export async function signup(state: FormState, formData: IUserRegistration) {
 	try {
@@ -54,7 +54,6 @@ export async function signup(state: FormState, formData: IUserRegistration) {
 
 export async function login(state: FormState, formData: ILoginDetails) {
 	try {
-	  // Validate form fields
 	  const validatedFields = loginSchema.safeParse(formData);
   
 	  if (!validatedFields.success) {
@@ -94,6 +93,43 @@ export async function login(state: FormState, formData: ILoginDetails) {
 	redirect('/Home');
 }
  
+export async function changePassword(state: FormState, formData: IChangePassword) {
+	try {
+	  const validatedFields = changePasswordSchema.safeParse(formData);
+  
+	  if (!validatedFields.success) {
+		console.error("Validation errors:", validatedFields.error.flatten().fieldErrors);
+		return {
+		  errors: validatedFields.error.flatten().fieldErrors,
+		};
+	  }
+  
+	  const { email, password, token } = validatedFields.data;
+  
+	  const res = await fetch('https://olojaa-backendb2b.onrender.com/api/v1/change-password', {
+		method: 'POST',
+		headers: { 
+		  'Content-Type': 'application/json',
+		  'Accept': 'application/json'
+		},
+		body: JSON.stringify({ email, password, password_confirmation:password, token: token }),
+	  });
+  
+	  const data = await res.json();
+  
+	  if (!res.ok) {
+		return {
+		  message: data.message || 'Unexpected error occurred. Please try again.',
+		};
+	  }
+  
+	} catch (error) {
+	  console.error("Unexpected login error:", error);
+	  return {
+		message: 'Unexpected error occurred. Please try again.',
+	  };
+	}
+}
 export async function logout() {
   deleteSession()
   redirect('/Login')
