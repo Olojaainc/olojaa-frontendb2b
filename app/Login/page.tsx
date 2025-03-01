@@ -1,37 +1,37 @@
-'use client'
+"use client";
 import Link from "next/link";
-import AuthLayout from "../Signup/Layout";
+import AuthLayout from "../signup/Layout";
 import Image from "next/image";
 import { startTransition, useActionState, useState } from "react";
 import { login } from "../Auth/actions";
-import { Alert } from 'antd';
+import { Alert } from "antd";
 
 export default function Login() {
   const [state, action, pending] = useActionState(login, undefined);
 
   const [formValues, setFormValues] = useState({
-      name: "",
-      address: "",
-      email: "",
-      phone_number: "",
-      password: "",
-      password_confirmation: "",
-    });
-  
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormValues((prev) => ({
-        ...prev,
-        [e.target.name]: e.target.value,
-      }));
-    };
+    name: "",
+    address: "",
+    email: "",
+    phone_number: "",
+    password: "",
+    password_confirmation: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-  
-      startTransition(() => {
-        action(formValues);
-      }); 
-    };
+    event.preventDefault();
+
+    startTransition(() => {
+      action(formValues);
+    });
+  };
 
   const Login = [
     {
@@ -49,17 +49,22 @@ export default function Login() {
   ];
   return (
     <AuthLayout>
-      {
-        state?.message && (
-          <Alert className="fixed top-6 text-center w-72" message={state?.message} type="error" showIcon closable closeIcon />
-        )
-      }
+      {state?.message && (
+        <Alert
+          className="fixed top-6 text-center w-72"
+          message={state?.message}
+          type="error"
+          showIcon
+          closable
+          closeIcon
+        />
+      )}
       <div className="bg-white w-[464px] h-auto px-8 py-10 rounded-3xl shadow-lg">
         <div className="mb-8">
           <h3 className="font-bold text-xl mb-1"> Sign In</h3>
           <p className="font-normal text-sm text-[var(--gray-600)]">
             New to Olooja?{" "}
-            <Link href={"/Signup"} className="text-[var(--primary-400)]">
+            <Link href={"/signup"} className="text-[var(--primary-400)]">
               Sign Up
             </Link>
           </p>
@@ -107,7 +112,7 @@ export default function Login() {
               </div>
             ))}
             <Link
-              href={"/ForgotPassword"}
+              href={"/forgotPassword"}
               className="text-sm font-medium text-[var(--primary-400)]"
             >
               Forgot Password

@@ -1,7 +1,8 @@
 import DashboardLayout from "../Layouts/DashboardLayout";
 import CreditLine from "./Components/CreditLine";
 import OrderManagement from "./Components/OrderManagement";
-export default function Home() {
+
+export default function Dashboard() {
     return(
         <DashboardLayout>
            <div className="flex justify-between p-2 mb-6">

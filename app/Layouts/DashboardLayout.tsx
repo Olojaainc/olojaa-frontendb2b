@@ -9,6 +9,7 @@ import CurrencyNgn from '@/public/CurrencyNgn.svg';
 import CreditCard from '@/public/CreditCard.svg';
 import Headset from '@/public/Headset.svg';
 import GearSix from '@/public/GearSix.svg';
+import Link from "next/link";
 
 interface IDashboardLayout{
     children: React.ReactNode;
@@ -19,23 +20,28 @@ export default function DashboardLayout({children}:IDashboardLayout) {
     const Menu = [
         {
             title: 'Dashboard',
-            icon: House
+            icon: House,
+            path: '/dashboard'
         },
         {
             title: 'Orders',
-            icon: ListBullets
+            icon: ListBullets,
+            path: '/orders'
         },
         {
             title: 'Deliveries',
-            icon: Truck
+            icon: Truck,
+            path: 'deliveries'
         },
         {
             title: 'Transactions',
-            icon:CurrencyNgn
+            icon:CurrencyNgn,
+            path: 'transactions'
         },
         {
             title: 'Credit Line',
-            icon: CreditCard
+            icon: CreditCard,
+            path: 'credit-line'
         },
     ]
     return(
@@ -61,7 +67,7 @@ export default function DashboardLayout({children}:IDashboardLayout) {
                                         key={menuItems.title}
                                     >
                                         <Image className="mr-2" src={menuItems.icon} width={16} height={16} alt="" />
-                                        <p className="text-sm text-[var(--gray-400)]">{menuItems.title}</p>
+                                        <Link href={menuItems.path} className="text-sm text-[var(--gray-400)]">{menuItems.title}</Link>
                                     </div>
                                 )
                             })
