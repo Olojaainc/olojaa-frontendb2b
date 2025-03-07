@@ -45,8 +45,8 @@ export default function DashboardLayout({children}:IDashboardLayout) {
         },
     ]
     return(
-        <div className="flex w-[100vw] justify-evenly h-[100vh] bg-[#F5F5F5] pt-5 pb-[25px] overflow-scroll ">
-            <div className="flex flex-col w-[216px] h-[754px] px-2 ">
+        <div className="flex w-[100vw] justify-center h-[100vh] bg-[#F5F5F5] pt-5 pb-[25px] overflow-scroll ">
+            <div className="flex flex-col w-[216px] h-[754px] px-2 mr-[24px] ">
                 <div className="flex items-center justify-between">
                     <Image src={logo} width={75} height={24} alt="logo" />
                     <div className="flex items-center">
@@ -66,7 +66,7 @@ export default function DashboardLayout({children}:IDashboardLayout) {
                                         className={`flex mb-4 cursor-pointer ${index === 0 ? 'bg-white rounded-lg p-2 shadow-sm' : 'pl-2'}`} 
                                         key={menuItems.title}
                                     >
-                                        <Image className="mr-2" src={menuItems.icon} width={16} height={16} alt="" />
+                                        <Image  src={menuItems.icon} alt={menuItems.title} className="mr-2 w-auto h-auto" width={16} height={16}  />
                                         <Link href={menuItems.path} className="text-sm text-[var(--gray-400)]">{menuItems.title}</Link>
                                     </div>
                                 )
@@ -77,11 +77,11 @@ export default function DashboardLayout({children}:IDashboardLayout) {
                     <div>
                         <hr className="border border-solid border-[#D1D5DB] mb-4"/>
                         <div className="flex mb-4">
-                            <Image className="mr-2" src={Headset} width={16} height={16} alt="" />
+                            <Image className="mr-2 w-auto h-auto" src={Headset} width={16} height={16} alt="Headset Icon" />
                             <p className="text-sm text-[var(--gray-400)]">Help</p>
                         </div>
                         <div className="flex">
-                            <Image className="mr-2" src={GearSix} width={16} height={16} alt="" />
+                            <Image className="mr-2 w-auto h-auto" src={GearSix} width={16} height={16} alt="Gear Icon" />
                             <p className="text-sm text-[var(--gray-400)]">Settings</p>
                         </div>
                     </div>

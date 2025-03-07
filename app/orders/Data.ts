@@ -1,3 +1,9 @@
+import { ICardContent } from "../Types/Interfaces/ICard";
+import ListBullets from '@/public/ListBulletsBlack.svg';
+import CheckCircle from '@/public/CheckCircle.svg';
+import ClockCountdown from '@/public/ClockCountdown.svg';
+import Repeat from '@/public/Repeat.svg';
+
 export const data = {
     "status": true,
     "message": "Orders",
@@ -21,7 +27,7 @@ export const data = {
             "address": "Somolu street and bariga",
             "delivery_date": "2025-03-08 00:00:00",
             "delivery_type": "recurring",
-            "status": "pending",
+            "status": "completed",
             "gas_price": "500.00",
             "total_amount": "25000.00",
             "created_at": "2025-02-19T16:14:55.000000Z"
@@ -45,7 +51,7 @@ export const data = {
             "address": "Somolu street and bariga",
             "delivery_date": "2025-03-08 00:00:00",
             "delivery_type": "recurring",
-            "status": "pending",
+            "status": "recurring",
             "gas_price": "500.00",
             "total_amount": "10000.00",
             "created_at": "2025-02-19T16:17:27.000000Z"
@@ -69,10 +75,33 @@ export const data = {
             "address": "Somolu street and bariga",
             "delivery_date": "2025-03-08 00:00:00",
             "delivery_type": "recurring",
-            "status": "pending",
+            "status": "cancelled",
             "gas_price": "500.00",
             "total_amount": "10000.00",
             "created_at": "2025-02-19T16:22:49.000000Z"
         }
     ]
 }
+
+export const cardContent: ICardContent[] = [
+    {
+        cardTitle: 'All Orders',
+        Value: 200,
+        icon: ListBullets
+    },
+    {
+        cardTitle: 'Complete Orders',
+        Value: 127,
+        icon: CheckCircle
+    },
+    {
+        cardTitle: 'Pending Orders',
+        Value: 23,
+        icon: ClockCountdown
+    },
+    {
+        cardTitle: 'Recurring Orders',
+        Value: 50,
+        icon: Repeat
+    }
+];

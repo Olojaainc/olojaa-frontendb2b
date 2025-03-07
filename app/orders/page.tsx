@@ -2,149 +2,23 @@
 import Image from "next/image";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import File from '@/public/File.svg'
-import React from 'react';
-import { Button, Flex, Tabs } from 'antd';
+import React, { useEffect, useState } from 'react';
+import {ConfigProvider, Flex, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
-import { SearchOutlined} from '@ant-design/icons';
-import { IoFilter } from "react-icons/io5";
-import { TbArrowsSort } from "react-icons/tb";
-import ListBullets from '@/public/ListBulletsBlack.svg';
-import CheckCircle from '@/public/CheckCircle.svg';
-import ClockCountdown from '@/public/ClockCountdown.svg';
-import Repeat from '@/public/Repeat.svg';
-import { Input } from 'antd';
-import { ICardContent } from "../Types/Interfaces/ICard";
 import Cards from "../components/Cards";
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox"
-import { Order } from "../Types/Interfaces/IOrders";
-import { DataTable } from "../components/DataTable";
-import { data } from "./Data";
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
- 
-// import { Button } from "@/components/ui/button"
-  
+import { cardContent } from "./Data";
+import TabContent from "./TabContent";
 
 
-export const columns: ColumnDef<Order>[] = [
-	{
-		id: "select",
-		header: ({ table }) => (
-		  <Checkbox
-			className="border-[var(--gray-200)]"
-			checked={
-			  table.getIsAllPageRowsSelected() ||
-			  (table.getIsSomePageRowsSelected() && "indeterminate")
-			}
-			onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-			aria-label="Select all"
-		  />
-		),
-		cell: ({ row }) => (
-		  <Checkbox
-		  	className="border-[var(--gray-200)]"
-			checked={row.getIsSelected()}
-			onCheckedChange={(value) => row.toggleSelected(!!value)}
-			aria-label="Select row"
-		  />
-		),
-		enableSorting: false,
-		enableHiding: false,
-	  },
-	{
-	  accessorKey: "order_number",
-	  header: "Order ID",
-	},
-	{
-	  accessorKey: "created_at",
-	  header: "Order Date",
-	},
-	{
-	  accessorKey: "delivery_date",
-	  header: "Delivery Date",
-	},
-	{
-		accessorKey: "quantity",
-		header: "Quantity",
-	},
-	{
-		accessorKey: "gas_price",
-		header: "Price Per KG",
-	},
-	{
-		accessorKey: "total_amount",
-		header: "Total Amount",
-	},
-	{
-		accessorKey: "status",
-		header: "Order Status",
-	},
-	{
-		id: "actions",
-		enableHiding: false,
-		cell: ({ row }) => {
-		//   const payment = row.original
-	 
-		  return (
-			<DropdownMenu>
-			  <DropdownMenuTrigger asChild>
-					<Button  className="h-5 w-5 text-[var(--gray-500)] p-0">
-					<span className="sr-only">Open menu</span>
-					<MoreHorizontal />
-					</Button>
-			  </DropdownMenuTrigger>
-			  <DropdownMenuContent className="min-w-[80px] h-[125px] rounded-2xl justify-center" align="center">
-					{/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
-					<DropdownMenuItem
-						className="text-xs mb-[14px] font-medium text-[var(--gray-500)]"
-					//   onClick={() => navigator.clipboard.writeText(payment.id)}
-					>
-						View Order
-					</DropdownMenuItem>
-					{/* <DropdownMenuSeparator /> */}
-					<DropdownMenuItem className="text-xs mb-[14px] font-medium text-[var(--gray-500)]">Modify Order</DropdownMenuItem>
-					<DropdownMenuItem className="text-xs font-medium text-[var(--gray-500)]">Cancel Order</DropdownMenuItem>
-			  </DropdownMenuContent>
-			</DropdownMenu>
-		  )
-		},
-	},
-]
-
-function TabContent() {
-	
-	return(
-		<Flex gap={'12px'} className="flex-col">
-			<Flex gap={'8px'}>
-				<Input placeholder="Search" prefix={<SearchOutlined />} className="w-[296px] rounded-xl border-[0.96px] placeholder:text-[#475467] "/>
-				<Flex gap={'8px'}>
-					<Button icon={<IoFilter className=" w-5 h-5 mt-1" />} className="rounded-xl py-2 px-[14px] w-[90px] h-9 text-sm font-semibold">
-						Filter
-					</Button>
-					<Button icon={<TbArrowsSort className=" w-5 h-5 mt-1" />} className="rounded-xl py-2 px-[14px] w-[90px] h-9 text-sm font-semibold ">
-						Sort
-					</Button>
-				</Flex>
-			</Flex>
-			<DataTable columns={columns} data={data.data} />
-		</Flex>
-	)
-}
 
 export default function Orders() {
-
-	const onChange = (key: string) => {
-	console.log(key);
-	};
+	const [isMounted, setIsMounted] = useState(false);
+  
+	useEffect(() => {
+	  setIsMounted(true);
+	}, []);
+  
+	if (!isMounted) return null;
 
 	const items: TabsProps['items'] = [
 		{
@@ -155,46 +29,23 @@ export default function Orders() {
 		{
 			key: '2',
 			label: 'Completed',
-			children: <TabContent />,
+			children: <TabContent status="completed" />,
 		},
 		{
 			key: '3',
 			label: 'Pending',
-			children: <TabContent />,
+			children: <TabContent status="pending" />,
 		},
 		{
 			key: '4',
 			label: 'Cancelled',
-			children: <TabContent />,
+			children: <TabContent status="cancelled" />,
 		},
 		{
 			key: '5',
 			label: 'Recurring',
-			children: <TabContent />,
+			children: <TabContent  status="recurring"/>,
 		},
-	];
-
-	const cardContent: ICardContent[] = [
-		{
-			cardTitle: 'All Orders',
-			Value: 200,
-			icon: ListBullets
-		},
-		{
-			cardTitle: 'Complete Orders',
-			Value: 127,
-			icon: CheckCircle
-		},
-		{
-			cardTitle: 'Pending Orders',
-			Value: 23,
-			icon: ClockCountdown
-		},
-		{
-			cardTitle: 'Recurring Orders',
-			Value: 50,
-			icon: Repeat
-		}
 	];
 
     return(
@@ -229,7 +80,22 @@ export default function Orders() {
 						content={cardContent[3]}
 					/>
                 </Flex>
-				<Tabs defaultActiveKey="1" items={items} onChange={onChange} className="mt-6" />
+				<ConfigProvider
+					theme={{
+						components: {
+						  Tabs: {
+							itemColor: "#6B7280", 
+							itemSelectedColor: "#374151",
+							itemHoverColor: "#374151", 
+							itemActiveColor: "#374151", 
+							inkBarColor: "#FF6A00", 
+						  },
+						},
+					}}
+				>
+					<Tabs defaultActiveKey="1" items={items} />
+				</ConfigProvider>
+				
             </div>
         </DashboardLayout>
     )
