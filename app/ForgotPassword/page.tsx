@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import AuthLayout from "@/app/signup/Layout";
+import AuthLayout from "@/app/signup/AuthLayout";
 import { useState } from "react";
 import { Alert } from "antd";
 import { IErrorResponse } from "../Types/Interfaces/IUser";
