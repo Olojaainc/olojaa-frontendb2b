@@ -89,7 +89,7 @@ export const columns: ColumnDef<Order>[] = [
 				#{row.getValue("gas_price")}
 			</div>
 		),
-},
+	},
 	{
 		accessorKey: "total_amount",
 		header: () => <div className="text-right">Total Amount</div>,
