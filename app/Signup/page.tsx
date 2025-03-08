@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import AuthLayout from "./Layout";
+import AuthLayout from "@/app/signup/Layout";
 import Image from "next/image";
 import { startTransition, useActionState, useState } from "react";
 import { signup } from "../Auth/actions";
