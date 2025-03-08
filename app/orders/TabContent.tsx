@@ -5,7 +5,7 @@ import { SearchOutlined} from '@ant-design/icons';
 import { TbArrowsSort } from "react-icons/tb";
 import { Input, Flex } from 'antd';
 import { Check} from "lucide-react"
-import Filter from "./Filter";
+// import Filter from "./Filter";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal} from "lucide-react"
 import { formatDateLong } from "../Utils/dateFormat";
@@ -170,7 +170,7 @@ export default function TabContent({status}: ITabContent) {
 			<Flex gap={'8px'}>
 				<Input placeholder="Search" prefix={<SearchOutlined />} className="w-[296px] rounded-xl border-[0.96px] placeholder:text-[#475467] "/>
 				<Flex gap={'8px'}>
-					<Filter />
+					{/* <Filter /> */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button className="flex bg-transparent text-black hover:bg-[var(--gray-75)] border shadow-none rounded-xl py-2 px-[14px] w-[90px] h-9 text-sm font-semibold ">
