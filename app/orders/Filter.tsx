@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { IoFilter } from "react-icons/io5";
 import Image from "next/image";
 import { useState } from "react"
-import { format } from "util";
+import { format } from "date-fns";
 
 export default function Filter() {
     const [date, setDate] = useState<Date>()
@@ -106,10 +106,10 @@ export default function Filter() {
 							</PopoverTrigger>
 							<PopoverContent className="w-auto p-0" align="start">
 								<Calendar
-								mode="single"
-								selected={date}
-								onSelect={setDate}
-								initialFocus
+									mode="single"
+									selected={date}
+									onSelect={setDate}
+									initialFocus
 								/>
 							</PopoverContent>
 						</Popover>
@@ -129,10 +129,10 @@ export default function Filter() {
 							</PopoverTrigger>
 							<PopoverContent className="w-auto p-0" align="start">
 								<Calendar
-								mode="single"
-								selected={date}
-								onSelect={setDate}
-								initialFocus
+									mode="single"
+									selected={date}
+									onSelect={setDate}
+									initialFocus
 								/>
 							</PopoverContent>
 						</Popover>
