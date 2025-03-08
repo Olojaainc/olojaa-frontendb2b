@@ -1,6 +1,6 @@
 "use client";
 import { Alert } from "antd";
-import AuthLayout from "@/app/signup/AuthLayout";
+import AuthLayout from "@/app/Layouts/AuthLayout";
 import Link from "next/link";
 import Image from "next/image";
 import { startTransition, Suspense, useActionState, useState } from "react";
