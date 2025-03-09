@@ -6,7 +6,7 @@ import { startTransition, useActionState, useState } from "react";
 import { login } from "../Auth/actions";
 import { Alert } from "antd";
 
-export default function Login() {
+export default function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined);
 
   const [formValues, setFormValues] = useState({
