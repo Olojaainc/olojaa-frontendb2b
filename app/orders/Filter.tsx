@@ -58,7 +58,6 @@ export default function Filter() {
 									mode="single"
 									selected={date}
 									onSelect={setDate}
-									initialFocus
 								/>
 							</PopoverContent>
 						</Popover>
@@ -81,7 +80,6 @@ export default function Filter() {
 									mode="single"
 									selected={date}
 									onSelect={setDate}
-									initialFocus
 								/>
 							</PopoverContent>
 						</Popover>
@@ -109,7 +107,6 @@ export default function Filter() {
 									mode="single"
 									selected={date}
 									onSelect={setDate}
-									initialFocus
 								/>
 							</PopoverContent>
 						</Popover>
@@ -132,7 +129,6 @@ export default function Filter() {
 									mode="single"
 									selected={date}
 									onSelect={setDate}
-									initialFocus
 								/>
 							</PopoverContent>
 						</Popover>

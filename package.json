@@ -20,13 +20,12 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "date-fns": "^3.6.0",
     "formik": "^2.4.6",
     "jose": "^5.9.6",
     "lucide-react": "^0.477.0",
     "next": "15.1.4",
     "react": "^19.0.0",
-    "react-day-picker": "^8.10.1",
+    "react-day-picker": "^9.6.1",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "recharts": "^2.15.1",
@@ -49,10 +48,10 @@
     "typescript": "^5"
   },
   "overrides": {
-  "react-day-picker": {
-    "peerDependencies": {
-      "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+    "react-day-picker": {
+      "peerDependencies": {
+        "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+      }
     }
   }
-}
 }
