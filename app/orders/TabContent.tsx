@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal} from "lucide-react"
 import { formatDateLong } from "../Utils/dateFormat";
 import { StatusComponent } from "./StatusComponent";
-import { ColumnDef, orderColumns } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox"
 import { Order } from "../Types/Interfaces/IOrders";
 
@@ -23,11 +23,10 @@ import {
 
 interface ITabContent {
 	status?: string
-	setIsOpen?: () => void;
 	showDrawer:() => void;
 }
 
-export default function TabContent({status, showDrawer, setIsOpen}: ITabContent) {
+export default function TabContent({status, showDrawer}: ITabContent) {
 	const [sortOption, setSortOption] = useState("low-to-high");
 
 	const filteredOrders = status
