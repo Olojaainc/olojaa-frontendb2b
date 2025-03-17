@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
-import AuthLayout from "@/app/Layouts/AuthLayout";
 import Image from "next/image";
 import { startTransition, useActionState, useState } from "react";
 import { login } from "../Auth/actions";
 import { Alert } from "antd";
+import AuthLayout from "../Layouts/AuthLayout";
 
-export default function LoginForm() {
+export default function Login() {
   const [state, action, pending] = useActionState(login, undefined);
 
   const [formValues, setFormValues] = useState({

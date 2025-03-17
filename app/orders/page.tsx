@@ -6,13 +6,61 @@ import React, { useEffect, useState } from 'react';
 import {ConfigProvider, Flex, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import Cards from "../components/Cards";
-import { cardContent } from "./Data";
+import { cardContent, data } from "./Data";
 import TabContent from "./TabContent";
+import DrawerComponent from "../components/DrawerComponent";
+import { ColumnDef } from "@tanstack/react-table";
+import { Order } from "../Types/Interfaces/IOrders";
+
+const columnsDetails: ColumnDef<Order>[] = [
+			
+	{
+	  accessorKey: "order_number",
+	  header: "Order ID",
+	},
+	{
+		accessorKey: "quantity",
+		header:() => <div className="text-right">Quantity</div>,
+		cell: ({ row }) => (
+			<div className="text-right">
+				{row.getValue("quantity")}kg
+			</div>
+		)
+	},
+	{
+		accessorKey: "gas_price",
+		header: () => <div className="text-right">Price Per KG</div>,
+		cell: ({ row }) => (
+			<div className="text-right">
+				#{row.getValue("gas_price")}
+			</div>
+		),
+	},
+	{
+		accessorKey: "total_amount",
+		header: () => <div className="text-right">Total Amount</div>,
+		cell: ({ row }) => (
+			<div className="text-right">
+				#{row.getValue("total_amount")}
+			</div>
+		),
+	}
+]
 
 
 
 export default function Orders() {
 	const [isMounted, setIsMounted] = useState(false);
+	const [open, setOpen] = useState(false);
+    
+    const showDrawer = () => {
+        setOpen(true);
+    };
+    
+    const onClose = () => {
+        setOpen(false);
+    };
+
   
 	useEffect(() => {
 	  setIsMounted(true);
@@ -24,27 +72,27 @@ export default function Orders() {
 		{
 			key: '1',
 			label: 'All orders',
-			children: <TabContent />,
+			children: <TabContent showDrawer={showDrawer} />,
 		},
 		{
 			key: '2',
 			label: 'Completed',
-			children: <TabContent status="completed" />,
+			children: <TabContent showDrawer={showDrawer} status="completed" />,
 		},
 		{
 			key: '3',
 			label: 'Pending',
-			children: <TabContent status="pending" />,
+			children: <TabContent showDrawer={showDrawer} status="pending" />,
 		},
 		{
 			key: '4',
 			label: 'Cancelled',
-			children: <TabContent status="cancelled" />,
+			children: <TabContent showDrawer={showDrawer} status="cancelled" />,
 		},
 		{
 			key: '5',
 			label: 'Recurring',
-			children: <TabContent  status="recurring"/>,
+			children: <TabContent showDrawer={showDrawer}  status="recurring"/>,
 		},
 	];
 
@@ -97,6 +145,7 @@ export default function Orders() {
 				</ConfigProvider>
 				
             </div>
+			<DrawerComponent columnsDetails={columnsDetails} onClose={onClose } open={open} data={data.data} />
         </DashboardLayout>
     )
 }

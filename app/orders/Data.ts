@@ -83,6 +83,26 @@ export const data = {
     ]
 }
 
+export const orderDetails = {
+    "status": true,
+    "message": "Orders",
+    "data": {
+        "slug": "8bb9abe9-a650-40f8-bcb9-0521699e9386",
+        "order_number": "OLJ202503UlD",
+        "quantity": 20,
+        "address": "Somolu street and bariga",
+        "delivery_date": "2025-03-10 00:00:00",
+        "delivery_type": "recurring",
+        "status": "pending",
+        "gas_price": "500.00",
+        "total_amount": "500000.00",
+        "order_history": 6,
+        "created_at": "2025-03-10T07:20:13.000000Z",
+        "payment_status": "pending",
+        "credit_line_used": 0
+    }
+}
+
 export const cardContent: ICardContent[] = [
     {
         cardTitle: 'All Orders',
