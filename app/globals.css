@@ -6,6 +6,7 @@
   --white: #ffffff;
   --black: #171717;
   --gray-75: #F3F4F6;
+  --gray-100:#E5E7EB;
   --gray-200: #D1D5DB;
   --gray-300: #9CA3AF;
   --gray-400: #6B7280;
@@ -25,11 +26,20 @@
   --warning-75: #FBE2B7;
   --lime-75: #ECFCCB;
   --lime-600: #4D7C0F;
+  --blue: #0E32E5;
 }
 
 .custom-border {
   border: 0.5px solid;
   border-color: linear-gradient(259.3deg, #0F993D 9.89%, #FFFFFF 94.23%);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;  
 }
 
 /* @media (prefers-color-scheme: dark) {

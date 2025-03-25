@@ -90,7 +90,7 @@ export const orderDetails = {
         "slug": "8bb9abe9-a650-40f8-bcb9-0521699e9386",
         "order_number": "OLJ202503UlD",
         "quantity": 20,
-        "address": "Somolu street and bariga",
+        "address": "3,Somolu street, bariga, Lagos state",
         "delivery_date": "2025-03-10 00:00:00",
         "delivery_type": "recurring",
         "status": "pending",
