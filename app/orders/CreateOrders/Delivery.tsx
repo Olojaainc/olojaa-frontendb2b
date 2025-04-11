@@ -45,7 +45,7 @@ interface IDeliveryProps{
 }
 
 
-export default function Delivery({onClose, onPrev, onNext, formik}: IDeliveryProps) {
+export default function Delivery({ onPrev, onNext, formik}: IDeliveryProps) {
 	const [isRecurring, setRecurring] = useState(false);
 	const [recurringValue, setRecurringValue] = useState(0);
 	const [endDate, setEndDate] = useState<Date>()
