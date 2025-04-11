@@ -35,5 +35,5 @@ export interface IErrorResponse {
 
 export interface IErrors {
     email?: string[];
-    url?: string[];    
+    url?: string[];  
 }

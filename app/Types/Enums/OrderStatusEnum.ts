@@ -4,3 +4,12 @@ export enum OrderStatus{
     cancelled = 'cancelled',
     recurring = 'recurring'
 }
+
+export enum GasTypes{
+    LNG = 1,
+    CNG = 2
+}
+
+export enum DeliveryEnum{
+    recurring  = 'recurring',
+}
