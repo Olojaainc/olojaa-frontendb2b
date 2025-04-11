@@ -1,15 +1,14 @@
-'use client'
+"use client";
 import Link from "next/link";
-import AuthLayout from "./Layout";
+import AuthLayout from "@/app/Layouts/AuthLayout";
 import Image from "next/image";
 import { startTransition, useActionState, useState } from "react";
 import { signup } from "../Auth/actions";
-import { Alert } from 'antd';
-
+import { Alert } from "antd";
 
 export default function SignupForm() {
   const [state, action, pending] = useActionState(signup, undefined);
-  
+
   const [formValues, setFormValues] = useState({
     name: "",
     address: "",
@@ -36,7 +35,7 @@ export default function SignupForm() {
 
     startTransition(() => {
       action(formValues);
-    }); 
+    });
   };
 
   const sign = [
@@ -78,14 +77,17 @@ export default function SignupForm() {
     },
   ];
 
-
   return (
     <AuthLayout>
-      {
-        state?.message && (
-          <Alert className="fixed top-6 w-72" message={state?.message} type="error" showIcon closable />
-        )
-      }
+      {state?.message && (
+        <Alert
+          className="fixed top-6 w-72"
+          message={state?.message}
+          type="error"
+          showIcon
+          closable
+        />
+      )}
       <div className="bg-white w-[500px] h-auto px-8 py-10 rounded-3xl shadow-lg">
         <div className="mb-8">
           <h3 className="font-bold text-xl"> Create Business Account</h3>

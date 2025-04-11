@@ -49,7 +49,7 @@ export async function signup(state: FormState, formData: IUserRegistration) {
 	  };
 	}
   
-	redirect('/Home');
+	redirect('/dashboard');
   }
 
 export async function login(state: FormState, formData: ILoginDetails) {
@@ -90,7 +90,7 @@ export async function login(state: FormState, formData: ILoginDetails) {
 		message: 'Unexpected error occurred. Please try again.',
 	  };
 	}
-	redirect('/Home');
+	redirect('/dashboard');
 }
  
 export async function changePassword(state: FormState, formData: IChangePassword) {
@@ -132,5 +132,5 @@ export async function changePassword(state: FormState, formData: IChangePassword
 }
 export async function logout() {
   deleteSession()
-  redirect('/Login')
+  redirect('/login')
 }
