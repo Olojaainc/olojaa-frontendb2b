@@ -34,9 +34,20 @@ export async function createSession(userId: string) {
       httpOnly: true,
       secure: true,
       expires: expiresAt,
-      sameSite: 'lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       path: '/',
     })
+}
+
+export async function setBearerToken(token: string){
+  const cookieStore = await cookies();
+
+  cookieStore.set('authToken', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/',
+  });
 }
 
 export async function updateSession() {

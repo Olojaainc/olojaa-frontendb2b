@@ -11,6 +11,7 @@ import TabContent from "./TabContent";
 import DrawerComponent from "../components/DrawerComponent";
 import { ColumnDef } from "@tanstack/react-table";
 import { Order } from "../Types/Interfaces/IOrders";
+import CreateOrder from "./CreateOrders/createOrders";
 
 const columnsDetails: ColumnDef<Order>[] = [
 			
@@ -52,6 +53,7 @@ const columnsDetails: ColumnDef<Order>[] = [
 export default function Orders() {
 	const [isMounted, setIsMounted] = useState(false);
 	const [open, setOpen] = useState(false);
+	const [isCreateOrder, setCreateOrder] = useState(false);
     
     const showDrawer = () => {
         setOpen(true);
@@ -59,6 +61,14 @@ export default function Orders() {
     
     const onClose = () => {
         setOpen(false);
+    };
+
+	const handleCreateOrder = () => {
+		setCreateOrder(true);
+	}
+
+	const onCloseOrder = () => {
+        setCreateOrder(false);
     };
 
   
@@ -102,11 +112,21 @@ export default function Orders() {
                 <div className="flex justify-between w-full">
                     <p className="font-semibold text-xl"> Orders</p>
                     <div className="flex justify-between w-[250px]">
-                        <button className="flex items-center justify-center bg-transparent text-[var(--gray-600] font-semibold w-[122px] h-[36px] border border-[var(--gray-200)] rounded-xl p-1 text-sm">
+                        <button className="flex items-center justify-center bg-transparent 
+							text-[var(--gray-600] font-semibold w-[122px] 
+							h-[36px] border border-[var(--gray-200)]
+							rounded-xl p-1 text-sm"
+						>
                             <Image src={File} width={20} height={20}  alt="file icon" />
                             Export CSV
                         </button>
-                        <button className="bg-[var(--primary-400)] font-semibold text-white w-[122px] h-[36px] rounded-xl p-1 text-sm">Make an Order</button>
+                        <button className="bg-[var(--primary-400)] 
+							font-semibold text-white w-[122px] 
+							h-[36px] rounded-xl p-1 text-sm"
+							onClick={handleCreateOrder}
+						>
+							Make an Order
+						</button>
                     </div>
                 </div>
                 <Flex className="flex justify-between mt-4">
@@ -146,6 +166,7 @@ export default function Orders() {
 				
             </div>
 			<DrawerComponent columnsDetails={columnsDetails} onClose={onClose } open={open} data={data.data} />
+			<CreateOrder isCreateOrder={isCreateOrder} onCloseOrder={onCloseOrder} />
         </DashboardLayout>
     )
 }

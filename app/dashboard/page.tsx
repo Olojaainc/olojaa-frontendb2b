@@ -1,6 +1,7 @@
 import DashboardLayout from "../Layouts/DashboardLayout";
 import CreditLine from "./Components/CreditLine";
 import OrderManagement from "./Components/OrderManagement";
+import { logout } from "../Auth/actions";
 
 export default function Dashboard() {
     return(
@@ -11,7 +12,7 @@ export default function Dashboard() {
                     <p className="font-medium text-sm text-[var(--gray-400)] ">Monday, January 6, 2025</p>
                 </div>
                 <div>
-                    <p>calender</p> 
+                    <button onClick={logout} className="text-sm font-medium text-[var(--primary-400)]">Logout</button>
                 </div>
            </div>
            <div className="flex justify-between mb-4">
