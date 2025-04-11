@@ -1,4 +1,3 @@
-import { IErrors } from "./IUser";
 
 export type Order = {
 	order_number: string,

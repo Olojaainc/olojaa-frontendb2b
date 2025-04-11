@@ -3,7 +3,7 @@ import { SignupSchema, FormState, loginSchema, changePasswordSchema } from '@/ap
 import { createSession, deleteSession, setBearerToken } from '@/app/Auth/_lib/session';
 import { redirect } from 'next/navigation';
 import { IChangePassword, ILoginDetails, IUserRegistration } from '../Types/Interfaces/IUser';
-import { cookies } from 'next/headers';
+
  
 export async function signup(state: FormState, formData: IUserRegistration) {
 	try {

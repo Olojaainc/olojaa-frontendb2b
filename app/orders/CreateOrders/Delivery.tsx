@@ -35,7 +35,7 @@ import { Input } from "@/components/ui/input"
 import { orderDetails } from "../Data"
 import { useFormik } from 'formik';
 import { IOrderDetails } from "@/app/Types/Interfaces/IOrders"
-import { formatDateLong, formatDateShort } from "@/app/Utils/dateFormat"
+import { formatDateShort } from "@/app/Utils/dateFormat"
 
 interface IDeliveryProps{
     formik: ReturnType<typeof useFormik<IOrderDetails>>;
