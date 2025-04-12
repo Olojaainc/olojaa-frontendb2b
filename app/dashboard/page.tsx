@@ -1,7 +1,7 @@
 import DashboardLayout from "../Layouts/DashboardLayout";
 import CreditLine from "./Components/CreditLine";
 import OrderManagement from "./Components/OrderManagement";
-import { logout } from "../Auth/actions";
+import { logout } from "@/app/Auth/actions";
 
 export default function Dashboard() {
     return(
