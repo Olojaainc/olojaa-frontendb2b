@@ -135,7 +135,7 @@ export default function ForgotPassword() {
             {loading ? "Processing..." : "Send Reset Link"}
           </button>
           <Link
-            href={"/Login"}
+            href={"/signin"}
             className="text-sm font-medium text-[var(--primary-400)]"
           >
             Back to Sign in?

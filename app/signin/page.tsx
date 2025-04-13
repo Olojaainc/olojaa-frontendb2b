@@ -6,7 +6,7 @@ import { login } from "../Auth/actions";
 import { Alert } from "antd";
 import AuthLayout from "../Layouts/AuthLayout";
 
-export default function Login() {
+export default function Signin() {
   const [state, action, pending] = useActionState(login, undefined);
 
   const [formValues, setFormValues] = useState({
