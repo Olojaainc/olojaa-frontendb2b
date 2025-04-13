@@ -117,7 +117,7 @@ function ChangePasswordForm() {
               {pending ? "Resetting password..." : "Reset Password"}
             </button>
             <Link
-              href={"/login"}
+              href={"/signin"}
               className="text-sm  font-medium text-[var(--primary-400)]"
             >
               Back to Sign in?

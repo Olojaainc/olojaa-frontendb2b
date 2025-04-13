@@ -1,7 +1,8 @@
-import Login from "./login/page";
+import Signin from "./signin/page";
+
 
 export default function Home() {
   return (
-    <Login />
+    <Signin />
   );
 }

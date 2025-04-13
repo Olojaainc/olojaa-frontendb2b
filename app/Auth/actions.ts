@@ -106,5 +106,5 @@ export async function changePassword(state: FormState, formData: IChangePassword
 }
 export async function logout() {
   deleteSession()
-  redirect('/login')
+  redirect('/signin');
 }
