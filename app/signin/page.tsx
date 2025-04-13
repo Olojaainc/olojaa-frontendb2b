@@ -112,7 +112,7 @@ export default function Signin() {
               </div>
             ))}
             <Link
-              href={"/forgotPassword"}
+              href={"/forgotpassword"}
               className="text-sm font-medium text-[var(--primary-400)]"
             >
               Forgot Password
