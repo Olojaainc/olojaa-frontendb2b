@@ -19,7 +19,7 @@ export default function ForgotPassword() {
 
   const redirectUrl =
     process.env.NEXT_PUBLIC_REDIRECT_URL ||
-    "http://localhost:3000/ChangePassword";
+    "http://localhost:3000/changepassword";
 
   const resetPassword = async (formValues: string) => {
     setLoading(true);
