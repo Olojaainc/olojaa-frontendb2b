@@ -71,7 +71,6 @@ export async function login(state: FormState, formData: ILoginDetails) {
 	
 		await createSession(user.slug);
 	
-		// ✅ No need to catch redirect!
 		redirect('/dashboard');
   }
  
