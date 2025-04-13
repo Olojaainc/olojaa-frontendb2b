@@ -93,7 +93,7 @@ export default function SignupForm() {
           <h3 className="font-bold text-xl"> Create Business Account</h3>
           <p className="font-normal text-sm text-[var(--gray-600)]">
             Already have an account?{" "}
-            <Link href={"/Login"} className="text-[var(--primary-400)]">
+            <Link href={"/login"} className="text-[var(--primary-400)]">
               Sign in
             </Link>
           </p>
