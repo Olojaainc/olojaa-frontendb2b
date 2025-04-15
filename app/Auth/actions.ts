@@ -43,7 +43,7 @@ export async function signup(state: FormState, formData: IUserRegistration) {
 		await setBearerToken(user.data.token);
 	}
 
-	await createSession(user.slug);
+	await createSession(user.data.slug);
 	redirect('/dashboard');
   
 }
@@ -64,7 +64,6 @@ export async function login(state: FormState, formData: ILoginDetails) {
 		});
 	
 		const user = await res.json();
-		console.log(user);
 	
 		if (!res.ok) {
 			return { message: user.message || 'Invalid credentials. Please try again.' };
@@ -75,9 +74,6 @@ export async function login(state: FormState, formData: ILoginDetails) {
 		}
 	
 		await createSession(user.data.slug);
-
-		await new Promise(resolve => setTimeout(resolve, 100));
-
 	
 		redirect('/dashboard');
   }
