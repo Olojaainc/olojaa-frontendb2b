@@ -11,19 +11,18 @@ export default async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path)
 
   const cookie = (await cookies()).get("session")?.value;
-  console.log('Cookie exists:', !!cookie);
   const session = await decrypt(cookie)
-  const redirectUrl = new URL('/signin', req.url);
-  const redirectResponse = NextResponse.redirect(redirectUrl);
 
-  if (isProtectedRoute && !session?.exp) {
-    redirectResponse.headers.set("x-middleware-cache", "no-cache")
-
+  if (isProtectedRoute && (!session?.exp || !session?.userId)) {
+    const redirectResponse = NextResponse.redirect(new URL('/signin', req.nextUrl));
+    redirectResponse.headers.set("x-middleware-cache", "no-cache");
     return redirectResponse;
   }
 
-  if (isPublicRoute && session?.exp ) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+  if (isPublicRoute && session?.exp && session?.userId) {
+    const redirectResponse = NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+    redirectResponse.headers.set("x-middleware-cache", "no-cache");
+    return redirectResponse;
   }
 
   return NextResponse.next()
