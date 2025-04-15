@@ -27,7 +27,7 @@ export interface IResetPassword {
     email: string;
 }
 
-export interface IErrorResponse {
+export interface IResponse {
     errors?: IErrors;
     message?: string; 
     status?: boolean

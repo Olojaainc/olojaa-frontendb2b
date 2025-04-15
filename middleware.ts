@@ -10,19 +10,14 @@ export default async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path)
 
   const cookie = req.cookies.get('session')?.value
+  console.log('Cookie:', cookie);
   const session = await decrypt(cookie)
 
-  // ✅ Step 1: Protected routes need valid session
-  if (isProtectedRoute && (!session?.exp)) {
-    // ✅ Prevent infinite redirect if already on /signin
-    if (req.nextUrl.pathname !== '/signin') {
-      return NextResponse.redirect(new URL('/signin', req.nextUrl))
-    }
-    return NextResponse.next()
+  if (isProtectedRoute && !session?.exp) {
+    return NextResponse.redirect(new URL('/signin', req.nextUrl))
   }
 
-  // ✅ Step 2: Public routes, redirect to dashboard if already authenticated
-  if (isPublicRoute && session?.exp && !req.nextUrl.pathname.startsWith('/dashboard')) {
+  if (isPublicRoute && session?.exp ) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
   }
 
