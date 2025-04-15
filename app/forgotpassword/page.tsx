@@ -3,11 +3,11 @@ import Link from "next/link";
 import AuthLayout from "@/app/Layouts/AuthLayout";
 import { useState } from "react";
 import { Alert } from "antd";
-import { IErrorResponse } from "../Types/Interfaces/IUser";
+import { IResponse } from "../Types/Interfaces/IUser";
 
 export default function ForgotPassword() {
   const [formValues, setFormValues] = useState({ email: "" });
-  const [apiResponse, setApiResponse] = useState<IErrorResponse | null>(null);
+  const [apiResponse, setApiResponse] = useState<IResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +40,7 @@ export default function ForgotPassword() {
         }
       );
 
-      const data: IErrorResponse = await res.json();
+      const data: IResponse = await res.json();
 
       if (!res.ok) {
         setApiResponse(data);
