@@ -39,6 +39,10 @@ export async function signup(state: FormState, formData: IUserRegistration) {
 
 	const user = await res.json();
 
+	if (user.data.token) {
+		await setBearerToken(user.data.token);
+	}
+
 	await createSession(user.slug);
 	redirect('/dashboard');
   

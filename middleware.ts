@@ -13,11 +13,11 @@ export default async function middleware(req: NextRequest) {
   const cookie = (await cookies()).get("session")?.value;
   console.log('Cookie exists:', !!cookie);
   const session = await decrypt(cookie)
-  console.log('Decrypted session:', session);
 
-
-  if (isProtectedRoute) {
-    return NextResponse.redirect(new URL('/signin', req.nextUrl))
+  if (isProtectedRoute && !session?.expiresAt) {
+    return NextResponse.rewrite(new URL("/signin", req.url), {
+      status: 303,
+    });
   }
 
   if (isPublicRoute && session?.expiresAt ) {
