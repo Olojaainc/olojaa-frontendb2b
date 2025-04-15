@@ -70,6 +70,9 @@ export async function login(state: FormState, formData: ILoginDetails) {
 		}
 	
 		await createSession(user.slug);
+
+		await new Promise(resolve => setTimeout(resolve, 100));
+
 	
 		redirect('/dashboard');
   }
