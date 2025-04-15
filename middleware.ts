@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { decrypt } from '@/app/Auth/_lib/session'
 import { cookies } from 'next/headers'
 
-const protectedRoutes = ['/orders']
-const publicRoutes = ['/signin', '/signup','/dashboard', '/']
+const protectedRoutes = ['/dashboard', '/orders']
+const publicRoutes = ['/signin', '/signup', '/']
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
@@ -16,7 +16,7 @@ export default async function middleware(req: NextRequest) {
   console.log('Decrypted session:', session);
 
 
-  if (isProtectedRoute && !session?.expiresAt) {
+  if (isProtectedRoute) {
     return NextResponse.redirect(new URL('/signin', req.nextUrl))
   }
 
