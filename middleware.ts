@@ -13,11 +13,13 @@ export default async function middleware(req: NextRequest) {
   const cookie = (await cookies()).get("session")?.value;
   console.log('Cookie exists:', !!cookie);
   const session = await decrypt(cookie)
+  const redirectUrl = new URL('/signin', req.url);
+  const redirectResponse = NextResponse.redirect(redirectUrl);
 
   if (isProtectedRoute && !session?.exp) {
-    return NextResponse.rewrite(new URL("/signin", req.url), {
-      status: 303,
-    });
+    redirectResponse.headers.set("x-middleware-cache", "no-cache")
+
+    return redirectResponse;
   }
 
   if (isPublicRoute && session?.exp ) {
