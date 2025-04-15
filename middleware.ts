@@ -7,36 +7,20 @@ const publicRoutes = ['/signin', '/signup', '/']
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
-  const isPublicRoute = publicRoutes.some(route => path === route)
+  const isProtectedRoute = protectedRoutes.includes(path)
+  const isPublicRoute = publicRoutes.includes(path)
 
-  // Get the session cookie
-  const sessionCookie = req.cookies.get("session")?.value
-  
-  // Check if the user has a valid session
-  const hasValidSession = sessionCookie ? await isValidSession(sessionCookie) : false
-  
-  // Helper function to check session validity
-  async function isValidSession(cookie: string) {
-    try {
-      const payload = await decrypt(cookie)
-      // Check if session exists and hasn't expired
-      if (!payload || !payload.expiresAt) return false
-      
-      // Check if session has expired
-      const now = Math.floor(Date.now() / 1000)
-      return typeof payload.expiresAt === 'number' && payload.expiresAt > now
-    } catch (error) {
-      return false
-    }
-  }
+  const cookie = (await cookies()).get("session")?.value;
+  console.log('Cookie exists:', !!cookie);
+  const session = await decrypt(cookie)
+  console.log('Decrypted session:', session);
 
-  // Redirect logic
-  if (isProtectedRoute && !hasValidSession) {
+
+  if (isProtectedRoute && !session?.expiresAt) {
     return NextResponse.redirect(new URL('/signin', req.nextUrl))
   }
 
-  if (isPublicRoute && hasValidSession) {
+  if (isPublicRoute && session?.expiresAt ) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
   }
 
@@ -44,5 +28,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|signin|signup|.*\\.png$).*)'],
 }
