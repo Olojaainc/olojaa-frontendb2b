@@ -4,6 +4,8 @@ import { decrypt } from '@/app/Auth/_lib/session'
 const protectedRoutes = ['/dashboard', '/orders']
 const publicRoutes = ['/signin', '/signup', '/']
 
+export const runtime = 'nodejs';
+
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)
