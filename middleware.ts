@@ -1,32 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { decrypt } from '@/app/Auth/_lib/session'
+import { cookies } from 'next/headers'
 
-const protectedRoutes = ['/dashboard', '/orders']
-const publicRoutes = ['/signin', '/signup', '/']
+// Define your protected routes
+const protectedRoutes = ['/dashboard', '/orders', '/account', '/settings']
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
-  const isPublicRoute = publicRoutes.includes(path)
-
-  const cookie = req.cookies.get("session")?.value
-  const session = await decrypt(cookie)
-
-  if (isProtectedRoute && (!session?.exp || !session?.userId)) {
-    const redirectResponse = NextResponse.redirect(new URL('/signin', req.nextUrl));
-    redirectResponse.headers.set("x-middleware-cache", "no-cache");
-    return redirectResponse;
+  
+  // Check if this is a protected route
+  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
+  
+  if (isProtectedRoute) {
+    // Get and verify the session
+    const cookie = req.cookies.get("session")?.value
+    if (!cookie) {
+      return NextResponse.redirect(new URL('/signin', req.nextUrl))
+    }
+    
+    const session = await decrypt(cookie)
+    if (!session?.exp || !session?.userId) {
+      return NextResponse.redirect(new URL('/signin', req.nextUrl))
+    }
   }
-
-  if (isPublicRoute && session?.exp && session?.userId) {
-    const redirectResponse = NextResponse.redirect(new URL('/dashboard', req.nextUrl));
-    redirectResponse.headers.set("x-middleware-cache", "no-cache");
-    return redirectResponse;
-  }
-
+  
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|favicon.ico|login|).*)'],
+  matcher: ['/((?!_next/static|favicon.ico|login|signin|signup|).*)']
 }
