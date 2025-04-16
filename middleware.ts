@@ -18,7 +18,7 @@ export default async function middleware(req: NextRequest) {
     return redirectResponse;
   }
 
-  if (isPublicRoute && session?.exp && session?.userId && !req.nextUrl.pathname.startsWith('/dashboard')) {
+  if (isPublicRoute && session?.exp && session?.userId) {
     const redirectResponse = NextResponse.redirect(new URL('/dashboard', req.nextUrl));
     redirectResponse.headers.set("x-middleware-cache", "no-cache");
     return redirectResponse;
@@ -28,5 +28,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ['/((?!_next/static|favicon.ico|login|).*)'],
 }
