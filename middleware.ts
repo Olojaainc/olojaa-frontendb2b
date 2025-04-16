@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { decrypt } from '@/app/Auth/_lib/session'
+import jwt from 'jsonwebtoken';
 
 const protectedRoutes = ['/dashboard', '/orders']
 const publicRoutes = ['/signin', '/signup', '/']
 
-export const runtime = 'nodejs';
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
@@ -12,7 +11,10 @@ export default async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path)
 
   const cookie = req.cookies.get("session")?.value
-  const session = await decrypt(cookie)
+  let session: any = null;
+  if (cookie) {
+    session = jwt.decode(cookie);
+  }
 
   if (isProtectedRoute && !session?.userId) {
     const redirectResponse = NextResponse.redirect(new URL('/signin', req.nextUrl));
