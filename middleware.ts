@@ -28,7 +28,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|api/public|.*\\.png$|signin|signup).*)',
-  ],
+  matcher: ['/dashboard/:path*', '/orders/:path*', '/signin', '/signup', '/'],
 }
