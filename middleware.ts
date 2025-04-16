@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { decrypt } from '@/app/Auth/_lib/session'
-import { cookies } from 'next/headers'
 
 const protectedRoutes = ['/dashboard', '/orders']
 const publicRoutes = ['/signin', '/signup', '/']
@@ -19,7 +18,7 @@ export default async function middleware(req: NextRequest) {
     return redirectResponse;
   }
 
-  if (isPublicRoute && session?.exp && session?.userId) {
+  if (isPublicRoute && session?.exp && session?.userId && !req.nextUrl.pathname.startsWith('/dashboard')) {
     const redirectResponse = NextResponse.redirect(new URL('/dashboard', req.nextUrl));
     redirectResponse.headers.set("x-middleware-cache", "no-cache");
     return redirectResponse;
