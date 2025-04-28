@@ -40,6 +40,7 @@ export default function CreateOrder({isCreateOrder, onCloseOrder}:ICreateOrder) 
         setError(data);
       }
     } catch (error: unknown) {
+      console.log('create orders error',error);
       setError({
         message: 'Network error. Please try again later.',
       });

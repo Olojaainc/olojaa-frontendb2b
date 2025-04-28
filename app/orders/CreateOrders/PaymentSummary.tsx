@@ -206,7 +206,7 @@ export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev,
                     <Alert className="flex items-center h-[56px] border border-[var(--primary-400)] bg-[var(--primary-50)] " variant="default">
                         <AlertCircle color="#FF6A00" className="h-4 w-4" />
                         <AlertDescription className="text-[var(--gray-600)] font-medium text-sm">
-                            {orderErrors.message}
+                            {orderErrors.message || errors?.message}
                         </AlertDescription>
                     </Alert>
                 )}
