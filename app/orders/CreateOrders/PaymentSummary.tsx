@@ -48,6 +48,7 @@ export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev,
       
           setOrderBreakdown(data);
         } catch (error: unknown) {
+            console.log('payment summary',error);
           setError({
             message: 'Network error. Please try again later.',
           });
