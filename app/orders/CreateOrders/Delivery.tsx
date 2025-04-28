@@ -1,3 +1,4 @@
+'use client';
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -54,7 +55,6 @@ export default function Delivery({ onPrev, onNext, formik}: IDeliveryProps) {
 	const [endMode, setEndMode] = useState<'Never' | 'On' | 'After'>('Never');
 	const [addresses, setAddresses] = useState<string[]>([
 		orderDetails.data.address,
-		// add more if needed
 	]);
 	const [newAddress, setNewAddress] = useState('');
 	const {handleChange, values, setFieldValue} = formik
@@ -339,7 +339,13 @@ export default function Delivery({ onPrev, onNext, formik}: IDeliveryProps) {
 							<p className="text-sm font-medium text-[var(--gray-900)]">End</p>
 
 							<div className="flex items-center space-x-2">
-								<RadioGroupItem value="Never" id="r1" />
+								<RadioGroupItem value="0" id="r1"
+									onClick={() => {
+										setEndDate(undefined);
+										setFieldValue("end_date", '');
+										setFieldValue("end_after", 0);
+									}}
+								/>
 								<Label htmlFor="r1">Never</Label>
 							</div>
 

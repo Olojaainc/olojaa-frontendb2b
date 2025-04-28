@@ -1,5 +1,6 @@
-import { ApiResonse, IOrderBreakdown, IOrderDetails, IOrderError } from "@/app/Types/Interfaces/IOrders";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+'use client';
+import { ApiErrorResponse, ApiResonse, IOrderBreakdown, IOrderDetails } from "@/app/Types/Interfaces/IOrders";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -14,43 +15,50 @@ interface IPaymentSummaryProps{
     formik: ReturnType<typeof useFormik<IOrderDetails>>;
     onPrev: () => void;
     onClose: () => void;
+    orderErrors: ApiErrorResponse | undefined
+    isLoading: boolean;
 }
 
 
-export default function PaymentSummary({onClose, onPrev, formik}:IPaymentSummaryProps) {
+export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev, formik}:IPaymentSummaryProps) {
     const {values, handleSubmit, setFieldValue} = formik
     const [orderBreakdown, setOrderBreakdown] = useState<ApiResonse<IOrderBreakdown>>();
-    const [errors, setError] = useState<IOrderError>(); 
+    const [errors, setError] = useState<ApiErrorResponse>(); 
   
     const getOrderBreakDown = async () => {
-      try {
-            const res = await fetch('/api/order-breakdown', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    gas_type_id: values.gas_type_id,
-                    quantity: values.quantity,
-                }),
-            });
-    
-            const data = await res.json();
-    
-            if (!res.ok) {
-                throw new Error(data.message || 'Something went wrong');
-            }
-    
-            setOrderBreakdown(data);
+      
+        try {
+          const res = await fetch('/api/order-breakdown', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              gas_type_id: values.gas_type_id,
+              quantity: values.quantity,
+            }),
+          });
+      
+          const data = await res.json();
+      
+          if (!res.ok) {
+            setError(data);
+            return;
+          }
+      
+          setOrderBreakdown(data);
         } catch (error: unknown) {
-            console.error('errors',error);
-            setError(error as IOrderError);
+          setError({
+            message: 'Network error. Please try again later.',
+          });
         }
     };
-  
+
     useEffect(() => {
-      getOrderBreakDown();
-    }, []);
+        if (values.gas_type_id && values.quantity) {
+          getOrderBreakDown();
+        }
+    }, [values.gas_type_id, values.quantity]);
 
     useEffect(() => {
         if (orderBreakdown?.data) {
@@ -62,14 +70,6 @@ export default function PaymentSummary({onClose, onPrev, formik}:IPaymentSummary
 
     return(
         <div className="p-6">
-            { ((errors?.gas_type_id?.length ?? 0) > 0 || (errors?.quantity?.length ?? 0) > 0) && <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>
-                    {errors?.gas_type_id && errors?.gas_type_id[0]}
-                    {errors?.quantity && errors?.quantity[0]}
-                </AlertDescription>
-            </Alert>}
             <DialogHeader>
                 <DialogTitle>Make an order</DialogTitle>
                 <div className="pt-6 ">
@@ -202,6 +202,14 @@ export default function PaymentSummary({onClose, onPrev, formik}:IPaymentSummary
                         <Label className="text-sm font-normal text-[var(--gray-600)]" htmlFor="r2">Pay with Credit Line</Label>
                     </div>
                 </RadioGroup>
+                {orderErrors && (
+                    <Alert className="flex items-center h-[56px] border border-[var(--primary-400)] bg-[var(--primary-50)] " variant="default">
+                        <AlertCircle color="#FF6A00" className="h-4 w-4" />
+                        <AlertDescription className="text-[var(--gray-600)] font-medium text-sm">
+                            {orderErrors.message}
+                        </AlertDescription>
+                    </Alert>
+                )}
 
             </div>
             <hr className="my-4" style={{ border: '1px thin #D1D5DB' }}/>
@@ -216,8 +224,9 @@ export default function PaymentSummary({onClose, onPrev, formik}:IPaymentSummary
                     type="button" 
                     variant="outline"
                     onClick={() => handleSubmit()}
+                    disabled={isLoading}
                 >
-                    Place Order
+                    {isLoading ? 'Creating Order' : 'Create Order'}
                 </Button>
             </DialogFooter>
         </div>

@@ -27,13 +27,14 @@ export interface IOrderDetails{
 	payment_method: string;
 	amount: number;
 	end_after: number;
+	callback_url?: string;
 }
 
 export interface ApiResonse<T>{
 	message: string;
 	status: boolean;
 	data: T;
-	errors?: IOrderError;
+	errors?: ApiErrorResponse;
 }
 
 export interface IOrderBreakdown{
@@ -45,9 +46,15 @@ export interface IOrderBreakdown{
 	total_price:number;
 }
 
-export interface IOrderError{
-	gas_type_id?: string[];
-	quantity?: string[];
-}
+type errors = 'email' | 'password' | 'payment_method' | 'address' | 'delivery_date' | 
+'delivery_type' | 'recurring' | 'frequency' | 'frequency_number' | 'start_date' | 'end_date' 
+| 'amount' | 'end_after' | 'gas_type_id' | 'gas_provider' | 'delivery_address' | 'quantity' 
+| 'delivery_fee' | 'price_per_kg' | 'service_charge' | 'total_price' | 'order_number' | 'slug' 
+| 'created_at' | 'status' | 'gas_price' | 'total_amount' | 'url' | 'phone_number' | 'name';
+
+export interface ApiErrorResponse {
+	message: string;
+	errors?: Record<errors, string[]>;
+  }
 
   
