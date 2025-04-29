@@ -28,6 +28,7 @@ export interface IOrderDetails{
 	amount: number;
 	end_after: number;
 	callback_url?: string;
+	date_picked: number
 }
 
 export interface ApiResonse<T>{

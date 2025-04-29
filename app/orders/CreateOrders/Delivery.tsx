@@ -344,6 +344,7 @@ export default function Delivery({ onPrev, onNext, formik}: IDeliveryProps) {
 										setEndDate(undefined);
 										setFieldValue("end_date", '');
 										setFieldValue("end_after", 0);
+										setFieldValue("date_picked", 0);
 									}}
 								/>
 								<Label htmlFor="r1">Never</Label>
@@ -367,6 +368,7 @@ export default function Delivery({ onPrev, onNext, formik}: IDeliveryProps) {
 											setEndDate(date);
 											setFieldValue("end_date", formatDateShort(date));
 											setFieldValue("end_after", 0);
+											setFieldValue("date_Picked", 1);
 										}}
 									/>
 									</PopoverContent>
@@ -384,6 +386,7 @@ export default function Delivery({ onPrev, onNext, formik}: IDeliveryProps) {
 										onChange={(e) => {
 											handleChange(e);
 											setFieldValue("end_date", ""); 
+											setFieldValue("date_picked", 0);
 										}}
 										className="w-14 ml-4"
 										type="number"

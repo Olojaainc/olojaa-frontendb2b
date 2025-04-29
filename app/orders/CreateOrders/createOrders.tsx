@@ -69,6 +69,7 @@ export default function CreateOrder({isCreateOrder, onCloseOrder}:ICreateOrder) 
       callback_url: process.env.NODE_ENV === 'development' 
         ? 'http://localhost:3000/orders' 
         : 'https://olojaa-frontendb2b-ashy.vercel.app/orders',
+      date_picked: 0
     } as IOrderDetails,
     onSubmit: (values) => {
       createOrder(values);

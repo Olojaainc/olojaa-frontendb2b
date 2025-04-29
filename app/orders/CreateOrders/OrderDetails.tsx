@@ -96,7 +96,7 @@ export default function OrderDetails({onClose, onNext, formik}:ICreateOrder) {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectItem value={GasTypes.LNG.toString()}>LNG (Cooking Gas)</SelectItem>
+                                    <SelectItem value={GasTypes.LPG.toString()}>LPG (Cooking Gas)</SelectItem>
                                     <SelectItem value={GasTypes.CNG.toString()}>CNG</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
