@@ -15,8 +15,8 @@ export default function Dashboard() {
                     <button onClick={logout} className="text-sm font-medium text-[var(--primary-400)]">Logout</button>
                 </div>
            </div>
-           <div className="flex justify-between mb-4">
-                <div className="flex flex-col items-start justify-between w-[380px] h-[160px] bg-white rounded-3xl py-4 px-3 shadow-sm">
+           <div className="flex justify-between mb-4 gap-6">
+                <div className="flex flex-col items-start justify-between w-full h-[160px] bg-white rounded-3xl py-4 px-3 shadow-sm">
                     <p className="text-xs mb-2 text-[var(--gray-600)]">Credit line remaining</p>
                     <p className="text-lg mb-2 font-semibold text-[var(--gray-900)]">500KG</p>
                     <div className="flex mb-2 items-center">
@@ -27,7 +27,7 @@ export default function Dashboard() {
                     </div>
                     <button className="border border-[#D1D5DB] text-sm font-semibold rounded-xl px-[14px] py-2">see full details</button>
                 </div>
-                <div className="flex flex-col items-start justify-between w-[380px] h-[160px]  bg-white rounded-3xl py-4 px-3 shadow-sm">
+                <div className="flex flex-col items-start justify-between w-full h-[160px]  bg-white rounded-3xl py-4 px-3 shadow-sm">
                     <p className="text-xs mb-2 text-[var(--gray-600)]">Credit line remaining</p>
                     <p className="text-lg mb-2 font-semibold text-[var(--gray-900)]">500KG</p>
                     <div className="flex mb-2 items-center">
@@ -38,7 +38,7 @@ export default function Dashboard() {
                     </div>
                     <button className="border border-[#D1D5DB] text-sm font-semibold rounded-xl px-[14px] py-2">see full details</button>
                 </div>
-                <div className="flex flex-col items-start justify-between w-[380px] h-[160px] bg-white rounded-3xl py-4 px-3 shadow-sm">
+                <div className="flex flex-col items-start justify-between w-full h-[160px] bg-white rounded-3xl py-4 px-3 shadow-sm">
                     <p className="text-xs mb-2 text-[var(--gray-600)]">Credit line remaining</p>
                     <p className="text-lg mb-2 font-semibold text-[var(--gray-900)]">500KG</p>
                     <div className="flex mb-2 items-center">
@@ -63,7 +63,7 @@ export default function Dashboard() {
                 </div>
                 <button className="bg-[var(--primary-400)] text-white w-[122px] h-[36px] rounded-xl p-1 text-sm">Make an Order</button>
            </div>
-           <div className="flex justify-between">
+           <div className="flex flex-wrap gap-6 justify-between">
                 <CreditLine />
                 <OrderManagement />
            </div>

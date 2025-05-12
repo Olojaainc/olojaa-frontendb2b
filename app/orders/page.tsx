@@ -1,19 +1,33 @@
 'use client';
-import Image from "next/image";
+
 import DashboardLayout from "../Layouts/DashboardLayout";
-import File from '@/public/File.svg'
+
 import React, { useEffect, useState } from 'react';
 import {ConfigProvider, Flex, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import Cards from "../components/Cards";
-import { cardContent, data } from "./Data";
+import { OrderscardContent, data } from "./Data";
 import TabContent from "./TabContent";
 import DrawerComponent from "../components/DrawerComponent";
 import { ColumnDef } from "@tanstack/react-table";
 import { Order } from "../Types/Interfaces/IOrders";
 import CreateOrder from "./CreateOrders/createOrders";
+import DashboardNavigation from "../components/DashboardNavigation";
+import { MoreHorizontal} from "lucide-react"
+import { formatDateLong } from "../Utils/dateFormat";
+import { StatusComponent } from "./StatusComponent";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
-const columnsDetails: ColumnDef<Order>[] = [
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+
+export const columnsDetails: ColumnDef<Order>[] = [
 			
 	{
 	  accessorKey: "order_number",
@@ -78,74 +92,166 @@ export default function Orders() {
   
 	if (!isMounted) return null;
 
+	const columns: ColumnDef<Order>[] = [
+		{
+			id: "select",
+			header: ({ table }) => (
+			  <Checkbox
+				className="border-[var(--gray-200)]"
+				checked={
+				  table.getIsAllPageRowsSelected() ||
+				  (table.getIsSomePageRowsSelected() && "indeterminate")
+				}
+				onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+				aria-label="Select all"
+			  />
+			),
+			cell: ({ row }) => (
+			  <Checkbox
+				  className="border-[var(--gray-200)]"
+				checked={row.getIsSelected()}
+				onCheckedChange={(value) => row.toggleSelected(!!value)}
+				aria-label="Select row"
+			  />
+			),
+			enableSorting: false,
+			enableHiding: false,
+		},
+		{
+		  accessorKey: "order_number",
+		  header: "Order ID",
+		},
+		{
+		  accessorKey: "created_at",
+		  header: "Order Date",
+		  cell: ({ row }) => (
+				<div>
+					{formatDateLong(row.getValue("created_at"))}
+				</div>
+			)
+		},
+		{
+		  accessorKey: "delivery_date",
+		  header: "Delivery Date",
+		  cell: ({ row }) => (
+				<div>
+					{formatDateLong(row.getValue("delivery_date"))}
+				</div>
+			)
+		},
+		{
+			accessorKey: "quantity",
+			header:() => <div className="text-right">Quantity</div>,
+			cell: ({ row }) => (
+				<div className="text-right">
+					{row.getValue("quantity")}kg
+				</div>
+			)
+		},
+		{
+			accessorKey: "gas_price",
+			header: () => <div className="text-right">Price Per KG</div>,
+			cell: ({ row }) => (
+				<div className="text-right">
+					#{row.getValue("gas_price")}
+				</div>
+			),
+		},
+		{
+			accessorKey: "total_amount",
+			header: () => <div className="text-right">Total Amount</div>,
+			cell: ({ row }) => (
+				<div className="text-right">
+					#{row.getValue("total_amount")}
+				</div>
+			),
+		},
+		{
+			accessorKey: "status",
+			header: "Order Status",
+			cell: ({ row }) => (
+				StatusComponent(row.getValue("status"))
+			),
+		},
+		{
+			id: "actions",
+			enableHiding: false,
+			cell: () => {
+				
+			  return (
+				<DropdownMenu>
+				  <DropdownMenuTrigger asChild>
+						<Button variant={'outline'}  className="h-5 w-5 text-[var(--gray-500)] border-none bg-none hover:bg-none shadow-none p-0">
+							<span className="sr-only">Open menu</span>
+							<MoreHorizontal />
+						</Button>
+				  </DropdownMenuTrigger>
+				  <DropdownMenuContent className="min-w-[80px] h-[135px] rounded-2xl flex flex-col justify-center" align="end">
+						<DropdownMenuItem
+							onClick={showDrawer} className="text-xs mb-[10px] font-normal text-[var(--gray-500)]"
+						>
+							
+							View Order
+							
+						</DropdownMenuItem>
+						<DropdownMenuItem className="text-xs mb-[10px] font-normal text-[var(--gray-500)]">Modify Order</DropdownMenuItem>
+						<DropdownMenuItem className="text-xs font-normal text-[var(--gray-500)]">Cancel Order</DropdownMenuItem>
+				  </DropdownMenuContent>
+				</DropdownMenu>
+			  )
+			},
+		},
+	]
+
 	const items: TabsProps['items'] = [
 		{
 			key: '1',
 			label: 'All orders',
-			children: <TabContent showDrawer={showDrawer} />,
+			children: <TabContent columns={columns} showDrawer={showDrawer} />,
 		},
 		{
 			key: '2',
 			label: 'Completed',
-			children: <TabContent showDrawer={showDrawer} status="completed" />,
+			children: <TabContent columns={columns} showDrawer={showDrawer} status="completed" />,
 		},
 		{
 			key: '3',
 			label: 'Pending',
-			children: <TabContent showDrawer={showDrawer} status="pending" />,
+			children: <TabContent columns={columns} showDrawer={showDrawer} status="pending" />,
 		},
 		{
 			key: '4',
 			label: 'Cancelled',
-			children: <TabContent showDrawer={showDrawer} status="cancelled" />,
+			children: <TabContent columns={columns} showDrawer={showDrawer} status="cancelled" />,
 		},
 		{
 			key: '5',
 			label: 'Recurring',
-			children: <TabContent showDrawer={showDrawer}  status="recurring"/>,
+			children: <TabContent columns={columns} showDrawer={showDrawer}  status="recurring"/>,
 		},
 	];
 
     return(
         <DashboardLayout>
-            <div className=" flex flex-col w-full bg-white h-full p-8 rounded-[20px]">
-                <div className="flex justify-between w-full">
-                    <p className="font-semibold text-xl"> Orders</p>
-                    <div className="flex justify-between w-[250px]">
-                        <button className="flex items-center justify-center bg-transparent 
-							text-[var(--gray-600] font-semibold w-[122px] 
-							h-[36px] border border-[var(--gray-200)]
-							rounded-xl p-1 text-sm"
-						>
-                            <Image src={File} width={20} height={20}  alt="file icon" />
-                            Export CSV
-                        </button>
-                        <button className="bg-[var(--primary-400)] 
-							font-semibold text-white w-[122px] 
-							h-[36px] rounded-xl p-1 text-sm"
-							onClick={handleCreateOrder}
-						>
-							Make an Order
-						</button>
-                    </div>
-                </div>
-                <Flex className="flex justify-between mt-4">
+            <div className=" flex flex-col w-full gap-6 bg-white h-full p-8 rounded-[20px]">
+                <DashboardNavigation title="Orders" handleCreateOrder={handleCreateOrder} isVisible/>
+                <Flex className="flex gap-4 justify-between mt-4">
 					<Cards 
 						backgroundGradient="bg-custom-radial-orange"
-						content={cardContent[0]}
+						content={OrderscardContent[0]}
 					/>
 					<Cards 
 						backgroundGradient="bg-custom-radial-green"
-						content={cardContent[1]}
+						content={OrderscardContent[1]}
 					/>
 					<Cards 
 						backgroundGradient="bg-custom-radial-yellow"
-						content={cardContent[2]}
+						content={OrderscardContent[2]}
 					/>
 
 					<Cards 
 						backgroundGradient="bg-custom-radial-neon"
-						content={cardContent[3]}
+						content={OrderscardContent[3]}
 					/>
                 </Flex>
 				<ConfigProvider
@@ -165,7 +271,15 @@ export default function Orders() {
 				</ConfigProvider>
 				
             </div>
-			<DrawerComponent columnsDetails={columnsDetails} onClose={onClose } open={open} data={data.data} />
+			<DrawerComponent 
+				panelTitle="Order Details" 
+				panelType="order" 
+				panelTypeID="#1234HG" 
+				columnsDetails={columnsDetails} 
+				onClose={onClose } 
+				open={open} data={data.data}
+				showPagination={false} 
+			/>
 			<CreateOrder isCreateOrder={isCreateOrder} onCloseOrder={onCloseOrder} />
         </DashboardLayout>
     )

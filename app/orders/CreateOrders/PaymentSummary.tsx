@@ -198,10 +198,10 @@ export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev,
                         <RadioGroupItem value="paystack" id="r1" />
                         <Label className="text-sm font-normal text-[var(--gray-600)]" htmlFor="r1">Pay with Transfer</Label>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    {/* <div className="flex items-center space-x-2">
                         <RadioGroupItem value="credit_line" id="r2" />
                         <Label className="text-sm font-normal text-[var(--gray-600)]" htmlFor="r2">Pay with Credit Line</Label>
-                    </div>
+                    </div> */}
                 </RadioGroup>
                 {orderErrors && (
                     <Alert className="flex items-center h-[56px] border border-[var(--primary-400)] bg-[var(--primary-50)] " variant="default">

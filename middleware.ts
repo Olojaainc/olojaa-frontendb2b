@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken';
 
-const protectedRoutes = ['/dashboard', '/orders']
-const publicRoutes = ['/signin', '/signup', '/']
+const protectedRoutes = ['']
+const publicRoutes = ['/signin', '/signup', '/', '/dashboard', '/orders', '/deliveries']
 
 
 export default async function middleware(req: NextRequest) {
@@ -31,6 +31,6 @@ export default async function middleware(req: NextRequest) {
   return NextResponse.next()
 }
 
-export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-}
+// export const config = {
+//   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+// }

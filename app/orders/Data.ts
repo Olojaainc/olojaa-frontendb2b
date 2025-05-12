@@ -3,6 +3,9 @@ import ListBullets from '@/public/ListBulletsBlack.svg';
 import CheckCircle from '@/public/CheckCircle.svg';
 import ClockCountdown from '@/public/ClockCountdown.svg';
 import Repeat from '@/public/Repeat.svg';
+import ConfirmIcon from '@/public/ConfirmIcon.svg';
+import deliveryTruck from '@/public/deliveryTruck.svg';
+
 
 export const data = {
     "status": true,
@@ -103,7 +106,7 @@ export const orderDetails = {
     }
 }
 
-export const cardContent: ICardContent[] = [
+export const OrderscardContent: ICardContent[] = [
     {
         cardTitle: 'All Orders',
         Value: 200,
@@ -124,4 +127,29 @@ export const cardContent: ICardContent[] = [
         Value: 50,
         icon: Repeat
     }
+];
+
+export const DeliveriescardContent: ICardContent[] = [
+    {
+        cardTitle: 'All Deliveries',
+        Value: 200,
+        icon: deliveryTruck
+    },
+    {
+        cardTitle: 'In Transit',
+        Value: 50,
+        icon: Repeat
+    },
+    {
+        cardTitle: 'Pending Deliveries',
+        Value: 23,
+        icon: ClockCountdown
+    },
+    {
+        cardTitle: 'Confirmed Deliveries',
+        Value: 127,
+        icon: ConfirmIcon
+    },
+    
+    
 ];
