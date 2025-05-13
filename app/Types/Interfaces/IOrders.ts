@@ -9,7 +9,10 @@ export type Order = {
 	created_at: string,
 	status: string,
 	gas_price: string,
-	total_amount: string
+	total_amount: string,
+	order_history?: number;
+	credit_line_used?: number;
+	payment_status?: string;
 }
 
 export interface IOrderDetails{

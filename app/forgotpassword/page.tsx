@@ -26,7 +26,7 @@ export default function ForgotPassword() {
     setApiResponse(null);
     try {
       const res = await fetch(
-        "https://olojaa-backendb2b.onrender.com/api/v1/reset-password",
+        "http://olojaa-testing-489e280a2994.herokuapp.com/api/v1/reset-password",
         {
           method: "POST",
           headers: {

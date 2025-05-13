@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 
   const body = await request.json();
 
-  const response = await fetch('https://olojaa-backendb2b.onrender.com/api/v1/business/order-breakdown', {
+  const response = await fetch('http://olojaa-testing-489e280a2994.herokuapp.com/api/v1/business/order-breakdown', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
