@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken';
 
-const protectedRoutes = ['/dashboard', '/orders']
+const protectedRoutes = ['/dashboard', '/orders', '/deliveries']
 const publicRoutes = ['/signin', '/signup', '/']
 
 

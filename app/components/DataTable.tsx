@@ -21,11 +21,13 @@ import { Button } from "@/components/ui/button"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  showPagination?: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  showPagination = true
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -78,7 +80,7 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      	{showPagination && <div className="flex items-center justify-end space-x-2 py-4">
             <div className="flex-1 text-sm text-muted-foreground">
             {table.getFilteredSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -101,7 +103,7 @@ export function DataTable<TData, TValue>({
                 Next
             </Button>
             </div>
-        </div>
+        </div>}
     </div>
   )
 }
