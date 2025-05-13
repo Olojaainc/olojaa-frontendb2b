@@ -154,32 +154,32 @@ export default function Deliveries() {
         {
             key: '1',
             label: 'All Deliveries',
-            children: <TabContent columns={columns} showDrawer={showDrawer} />,
+            children: <TabContent columns={columns}  />,
         },
         {
             key: '2',
             label: 'Pending',
-            children: <TabContent columns={columns} showDrawer={showDrawer} status="Pending" />,
+            children: <TabContent columns={columns}  status="Pending" />,
         },
         {
             key: '3',
             label: 'In Transit',
-            children: <TabContent columns={columns} showDrawer={showDrawer} status="transit" />,
+            children: <TabContent columns={columns}  status="transit" />,
         },
         {
             key: '4',
             label: 'Cancelled',
-            children: <TabContent columns={columns} showDrawer={showDrawer} status="cancelled" />,
+            children: <TabContent columns={columns} status="cancelled" />,
         },
         {
             key: '5',
             label: 'Recurring',
-            children: <TabContent columns={columns} showDrawer={showDrawer}  status="recurring"/>,
+            children: <TabContent columns={columns}  status="recurring"/>,
         },
         {
             key: '6',
             label: 'Delivered',
-            children: <TabContent columns={columns} showDrawer={showDrawer}  status="delivered"/>,
+            children: <TabContent columns={columns}  status="delivered"/>,
         },
     ];
     return(

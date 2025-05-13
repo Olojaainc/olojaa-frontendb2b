@@ -9,6 +9,7 @@ import Filter from "./Filter";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -19,7 +20,6 @@ import { Order } from "../Types/Interfaces/IOrders";
 
 interface ITabContent {
 	status?: string
-	// showDrawer:() => void;
 	columns: ColumnDef<Order>[]
 }
 

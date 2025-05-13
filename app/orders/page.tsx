@@ -207,27 +207,27 @@ export default function Orders() {
 		{
 			key: '1',
 			label: 'All orders',
-			children: <TabContent columns={columns} showDrawer={showDrawer} />,
+			children: <TabContent columns={columns}  />,
 		},
 		{
 			key: '2',
 			label: 'Completed',
-			children: <TabContent columns={columns} showDrawer={showDrawer} status="completed" />,
+			children: <TabContent columns={columns} status="completed" />,
 		},
 		{
 			key: '3',
 			label: 'Pending',
-			children: <TabContent columns={columns} showDrawer={showDrawer} status="pending" />,
+			children: <TabContent columns={columns} status="pending" />,
 		},
 		{
 			key: '4',
 			label: 'Cancelled',
-			children: <TabContent columns={columns} showDrawer={showDrawer} status="cancelled" />,
+			children: <TabContent columns={columns}  status="cancelled" />,
 		},
 		{
 			key: '5',
 			label: 'Recurring',
-			children: <TabContent columns={columns} showDrawer={showDrawer}  status="recurring"/>,
+			children: <TabContent columns={columns}  status="recurring"/>,
 		},
 	];
 
