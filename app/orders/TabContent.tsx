@@ -8,40 +8,52 @@ import { Check} from "lucide-react"
 import Filter from "./Filter";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-
-
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Order } from "../Types/Interfaces/IOrders";
 
-interface ITabContent {
+
+interface ITabContent<T extends Object> {
 	status?: string
-	columns: ColumnDef<Order>[]
+	columns: ColumnDef<T>[]
+	data: T[]
+	getSortValues?: (item: T) => {
+		total_amount: number;
+		quantity: number;
+		created_at: number;
+	};
+	onRowClick?: (row: T) => void;
 }
 
-export default function TabContent({status, columns}: ITabContent) {
+export default function TabContent<T extends Object>({status, columns, data, getSortValues, onRowClick}: ITabContent<T>) {
 	const [sortOption, setSortOption] = useState("low-to-high");
 
-	const filteredOrders = status
-		? data.data.filter((order) => order.status === status)
-		: data.data; 
+	const safeData = Array.isArray(data) ? data : [];
 
-	const sortedOrders = [...filteredOrders].sort((a, b) => {
+	const filteredItems = status
+    ? safeData.filter((item) => (item as any).status === status)
+    : safeData;
+
+	const sortedItems = [...filteredItems].sort((a, b) => {
+		if (!getSortValues) return 0;
+	
+		const aValues = getSortValues(a);
+		const bValues = getSortValues(b);
+	
 		switch (sortOption) {
 		  case "low-to-high":
-			return parseFloat(a.total_amount) - parseFloat(b.total_amount);
+			return aValues.total_amount - bValues.total_amount;
 		  case "high-to-low":
-			return parseFloat(b.total_amount) - parseFloat(a.total_amount);
+			return bValues.total_amount - aValues.total_amount;
 		  case "popularity":
-			return b.quantity - a.quantity;
+			return bValues.quantity - aValues.quantity;
 		  case "latest":
-			return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+			return bValues.created_at - aValues.created_at;
 		  case "newest":
-			return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+			return aValues.created_at - bValues.created_at;
 		  default:
 			return 0;
 		}
@@ -84,7 +96,7 @@ export default function TabContent({status, columns}: ITabContent) {
 					</DropdownMenu>
 				</Flex>
 			</Flex>
-			<DataTable columns={columns} data={sortedOrders} />
+			<DataTable columns={columns} data={sortedItems as any} onRowClick={onRowClick} />
 		</Flex>
 	)
 }

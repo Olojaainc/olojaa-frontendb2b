@@ -16,10 +16,12 @@ import { StatusComponent } from "../orders/StatusComponent";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import { orderConstant } from "../Constants/Orders";
 
 
 export default function Deliveries() {
     const [open, setOpen] = useState(false);
+        const [selectedItem, setSelectedItem] = useState<Order | null>(null)
 
     const showDrawer = () => {
         setOpen(true);
@@ -154,32 +156,50 @@ export default function Deliveries() {
         {
             key: '1',
             label: 'All Deliveries',
-            children: <TabContent columns={columns}  />,
+            children: <TabContent data={orderConstant} columns={columns} onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
         },
         {
             key: '2',
             label: 'Pending',
-            children: <TabContent columns={columns}  status="Pending" />,
+            children: <TabContent data={orderConstant} columns={columns}  status="Pending" onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
         },
         {
             key: '3',
             label: 'In Transit',
-            children: <TabContent columns={columns}  status="transit" />,
+            children: <TabContent data={orderConstant} columns={columns}  status="transit" onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
         },
         {
             key: '4',
             label: 'Cancelled',
-            children: <TabContent columns={columns} status="cancelled" />,
+            children: <TabContent data={orderConstant} columns={columns} status="cancelled" onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
         },
         {
             key: '5',
             label: 'Recurring',
-            children: <TabContent columns={columns}  status="recurring"/>,
+            children: <TabContent data={orderConstant} columns={columns}  status="recurring" onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
         },
         {
             key: '6',
             label: 'Delivered',
-            children: <TabContent columns={columns}  status="delivered"/>,
+            children: <TabContent data={orderConstant} columns={columns}  status="delivered" onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
         },
     ];
     return(
@@ -224,11 +244,11 @@ export default function Deliveries() {
             <DrawerComponent 
                 panelTitle="Delivery Details" 
                 panelType="delivery" 
-                panelTypeID="#1234HG" 
+                panelTypeID={selectedItem?.order_number} 
                 showPagination={false} 
                 columnsDetails={Drawercolumns} 
                 onClose={onClose } 
-                open={open} data={data.data} 
+                open={open} data={selectedItem} 
             />
         </DashboardLayout>
     )

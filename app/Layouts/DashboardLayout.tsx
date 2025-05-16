@@ -72,7 +72,7 @@ export default function DashboardLayout({children}:IDashboardLayout) {
                     </button>
                 </div>
             </aside>
-            <main className=" w-auto  pt-6 px-6 h-[100vh] overflow-auto">
+            <main className=" w-auto pt-6 px-6 h-[100vh] overflow-auto">
                 {children}
             </main>
         </div>
