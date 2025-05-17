@@ -3,7 +3,7 @@ import { ConfigProvider, Tabs, TabsProps } from "antd";
 import Cards from "../components/Cards";
 import DashboardNavigation from "../components/DashboardNavigation";
 import DashboardLayout from "../Layouts/DashboardLayout";
-import { data, DeliveriescardContent } from "../orders/Data";
+import { DeliveriescardContent } from "../orders/Data";
 import TabContent from "../orders/TabContent";
 import { useState } from "react";
 import DrawerComponent from "../components/DrawerComponent";

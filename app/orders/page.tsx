@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import {ConfigProvider, Flex, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import Cards from "../components/Cards";
-import { OrderscardContent, data } from "./Data";
+import { OrderscardContent} from "./Data";
 import TabContent from "./TabContent";
 import DrawerComponent from "../components/DrawerComponent";
 import { ColumnDef } from "@tanstack/react-table";
@@ -24,18 +24,16 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { columnsDetails } from "../components/ColumnsDetails";
 import { orderConstant } from "../Constants/Orders";
-
-
 
 
 export default function Orders() {
 	const [isMounted, setIsMounted] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [isCreateOrder, setCreateOrder] = useState(false);
-		const [selectedItem, setSelectedItem] = useState<Order | null>(null)
+	const [selectedItem, setSelectedItem] = useState<Order | null>(null)
     
     const showDrawer = () => {
         setOpen(true);

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { data } from "./Data";
+import { useMemo, useState } from "react";
 import { DataTable } from "../components/DataTable";
 import { SearchOutlined} from '@ant-design/icons';
 import { TbArrowsSort } from "react-icons/tb";
@@ -16,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 
-interface ITabContent<T extends Object> {
+interface ITabContent<T extends object> {
 	status?: string
 	columns: ColumnDef<T>[]
 	data: T[]
@@ -28,41 +27,45 @@ interface ITabContent<T extends Object> {
 	onRowClick?: (row: T) => void;
 }
 
-export default function TabContent<T extends Object>({status, columns, data, getSortValues, onRowClick}: ITabContent<T>) {
+export default function TabContent<T extends object>({status, columns, data, getSortValues, onRowClick}: ITabContent<T>) {
 	const [sortOption, setSortOption] = useState("low-to-high");
 
-	const safeData = Array.isArray(data) ? data : [];
+	const dataArray = Array.isArray(data) ? data : [];
 
 	const filteredItems = status
-    ? safeData.filter((item) => (item as any).status === status)
-    : safeData;
+    ? dataArray.filter((item) => (item as T & { status?: string }).status === status)
+    : dataArray;
 
-	const sortedItems = [...filteredItems].sort((a, b) => {
-		if (!getSortValues) return 0;
-	
-		const aValues = getSortValues(a);
-		const bValues = getSortValues(b);
-	
-		switch (sortOption) {
-		  case "low-to-high":
-			return aValues.total_amount - bValues.total_amount;
-		  case "high-to-low":
-			return bValues.total_amount - aValues.total_amount;
-		  case "popularity":
-			return bValues.quantity - aValues.quantity;
-		  case "latest":
-			return bValues.created_at - aValues.created_at;
-		  case "newest":
-			return aValues.created_at - bValues.created_at;
-		  default:
-			return 0;
-		}
-	});
+	const sortedItems = useMemo(() => {
+        if (!getSortValues) return filteredItems;
+
+        return [...filteredItems].sort((a, b) => {
+            const aValues = getSortValues(a);
+            const bValues = getSortValues(b);
+
+			console.log(aValues)
+
+            switch (sortOption) {
+                case "low-to-high":
+                    return aValues.total_amount - bValues.total_amount;
+                case "high-to-low":
+                    return bValues.total_amount - aValues.total_amount;
+                case "popularity":
+                    return bValues.quantity - aValues.quantity;
+                case "latest":
+                    return bValues.created_at - aValues.created_at;
+                case "newest":
+                    return aValues.created_at - bValues.created_at;
+                default:
+                    return 0;
+            }
+        });
+    }, [filteredItems, sortOption, getSortValues]);
 
 	const sort = [
 		{ value: "low-to-high", label: "Price: Low - High" },
 		{ value: "high-to-low", label: "Price: High - Low" },
-		{ value: "popularity", label: " Sort byPopularity" },
+		{ value: "popularity", label: " Sort by Popularity" },
 		{ value: "latest", label: "Sort by Latest" },
 		{ value: "newest", label: "Sort by Newest" },
 	]
@@ -96,7 +99,7 @@ export default function TabContent<T extends Object>({status, columns, data, get
 					</DropdownMenu>
 				</Flex>
 			</Flex>
-			<DataTable columns={columns} data={sortedItems as any} onRowClick={onRowClick} />
+			<DataTable columns={columns} data={sortedItems as T[]} onRowClick={onRowClick} />
 		</Flex>
 	)
 }
