@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Drawer } from "antd";
 import { IoMdClose } from "react-icons/io";
 import { StatusComponent } from "../orders/StatusComponent";
