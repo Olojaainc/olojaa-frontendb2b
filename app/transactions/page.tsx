@@ -17,9 +17,11 @@ import { ITransaction } from "../Types/Interfaces/ITransactions";
 import { IoMdClose } from "react-icons/io";
 import { DataTable } from "../components/DataTable";
 import { transactionConstant } from "../Constants/Transactions";
+import Dispute from "./dispute";
 
 export default function Transactions() {
     const [open, setOpen] = useState(false);
+    const [openDispute, setOpenDispute] = useState(false);
     const [selectedItem, setSelectedItem] = useState<ITransaction | null>(null)
 
 
@@ -30,6 +32,15 @@ export default function Transactions() {
     const onClose = () => {
         setOpen(false);
     };
+
+    const showDispute = () => {
+        setOpenDispute(true);
+    };
+
+    const onCloseDispute = () => {
+        setOpenDispute(false);
+    };
+
 
     const drawerColumns: ColumnDef<ITransaction>[] = [
             
@@ -255,6 +266,7 @@ export default function Transactions() {
                         variant="outline"
                         className="rounded-xl border-[var(--gray-200)]  
                         text-[var(--gray-600)] py-2 px-[14px] w-auto h-9 text-sm font-semibold"
+                        onClick={showDispute}
                         >
                         Dispute Transaction
                     </Button>
@@ -331,6 +343,7 @@ export default function Transactions() {
                     </div>
                 </div>
             </Drawer>
+            <Dispute onCloseDispute={onCloseDispute} openDispute={openDispute} selectedItem={selectedItem} />
         </DashboardLayout>
     )
 }

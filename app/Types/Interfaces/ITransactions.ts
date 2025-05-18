@@ -25,3 +25,15 @@ export interface ITransactionMeta {
     description: string;
     meta: ITransactionMeta;
   }
+
+  export interface IDisputeTypes {
+    id: number;
+    name: string;
+    description: string;
+  }
+
+  export interface IDisputePayload{
+    attachments: File[];
+    description: string;
+    dispute_type_id: number
+  }
