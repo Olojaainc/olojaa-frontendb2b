@@ -7,7 +7,6 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-
 import {
   Table,
   TableBody,
@@ -18,17 +17,19 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps<T extends object> {
+  columns: ColumnDef<T>[]
+  data: T[]
   showPagination?: boolean
+  onRowClick?: (row: T) => void
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<T extends object>({
   columns,
   data,
-  showPagination = true
-}: DataTableProps<TData, TValue>) {
+  showPagination = true,
+  onRowClick,
+}: DataTableProps<T>) {
   const table = useReactTable({
     data,
     columns,
@@ -37,35 +38,37 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead className="text-[var(--gray-600) font-semibold text-sm" key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                )
-              })}
+              {headerGroup.headers.map(header => (
+                <TableHead
+                  className="text-[var(--gray-600)] font-semibold text-sm"
+                  key={header.id}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map(row => (
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+                onClick={() => onRowClick?.(row.original)}
+                className="cursor-pointer hover:bg-gray-50"
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell className="text-[var(--gray-500)] font-medium text-sm" key={cell.id}>
+                {row.getVisibleCells().map(cell => (
+                  <TableCell
+                    className="text-[var(--gray-500)] font-medium text-sm"
+                    key={cell.id}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -80,31 +83,32 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      	{showPagination && <div className="flex items-center justify-end space-x-2 py-4">
-            <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-            </div>
-            <div className="space-x-2">
+
+      {showPagination && (
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <div className="text-sm text-muted-foreground">
+            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          </div>
+          <div className="space-x-2">
             <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
             >
-                Previous
+              Previous
             </Button>
             <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
             >
-                Next
+              Next
             </Button>
-            </div>
-        </div>}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
-

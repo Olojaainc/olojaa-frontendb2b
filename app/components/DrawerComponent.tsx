@@ -1,24 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Drawer } from "antd";
 import { IoMdClose } from "react-icons/io";
-import { DataTable } from "./DataTable";
 import { StatusComponent } from "../orders/StatusComponent";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { formatDateLong } from "../Utils/dateFormat";
-import { Order } from "../Types/Interfaces/IOrders";
+import { DataTable } from "./DataTable";
 
-interface IDrawerComponentProps<T extends object> {
+interface IDrawerComponentProps<T> {
   columnsDetails: ColumnDef<T>[];
   onClose: () => void;
+  onRowClick?: (row: T) => void;
   open: boolean;
-  data: T[];
+  data: T | null;
   showPagination?: boolean;
   panelTitle: string;
-  panelTypeID: string;
+  panelTypeID?: string;
   panelType: "order" | "delivery" | "transaction";
 }
 
-// Simple reusable info row
 const InfoRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <div className="flex justify-between">
     <span className="font-medium text-gray-700">{label}</span>
@@ -26,15 +26,18 @@ const InfoRow = ({ label, value }: { label: string; value: React.ReactNode }) =>
   </div>
 );
 
-// Reusable content section
-function DrawerDetailsSection<T extends object>({ title, fields, data }: {
+function DrawerDetailsSection<T>({
+  title,
+  fields,
+  data,
+}: {
   title: string;
   fields: { label: string; render: (data: T) => React.ReactNode }[];
   data: T;
 }) {
   return (
     <div className="w-full mt-8">
-      <span>{title}</span>
+      <span className="font-bold">{title}</span>
       <div className="grid grid-cols-1 gap-3 p-3 border rounded-2xl mt-3">
         {fields.map((field, idx) => (
           <InfoRow key={idx} label={field.label} value={field.render(data)} />
@@ -44,7 +47,7 @@ function DrawerDetailsSection<T extends object>({ title, fields, data }: {
   );
 }
 
-export default function DrawerComponent<T extends Order>({
+export default function DrawerComponent<T extends Record<string, any>>({
   columnsDetails,
   panelType,
   onClose,
@@ -52,10 +55,11 @@ export default function DrawerComponent<T extends Order>({
   panelTitle,
   panelTypeID,
   data,
-  showPagination
+  showPagination,
+  onRowClick,
 }: IDrawerComponentProps<T>) {
 
-  const item = data[0];
+  if (!data) return null;
 
   const commonFields = [
     { label: "Order Date", render: (d: T) => formatDateLong(d.created_at) },
@@ -70,9 +74,19 @@ export default function DrawerComponent<T extends Order>({
   ];
 
   const paymentFields = [
+    { label: "Payment Status", render: (d: T) => StatusComponent(d.status) },
+    { label: "Payment Date", render: (d: T) => formatDateLong(d.created_at) },
     { label: "Credit Line Used", render: (d: T) => d.credit_line_used ?? 0 },
     { label: "Amount Paid", render: (d: T) => d.total_amount ?? "—" },
   ];
+
+  const paymentOverview = [
+    { label: "Quantity", render: (d: T) => d.quantity ?? d.meta?.quantity },
+    { label: "Price per KG", render: (d: T) => d.gas_price ?? d.meta?.gas_price },
+    { label: "Amount Paid", render: (d: T) => d.total_amount ?? "—" },
+  ];
+
+  console.log(data);
 
   return (
     <Drawer
@@ -85,28 +99,33 @@ export default function DrawerComponent<T extends Order>({
     >
       <div className="flex justify-between mb-9">
         <div className="flex flex-col space-y-2">
-          <h2 className="text-2xl font-semibold">{panelType} ID: {panelTypeID}</h2>
-          <div className="flex space-x-2">{StatusComponent(item.status)}</div>
+          <h2 className="text-2xl font-semibold">
+            {panelType} ID: {panelTypeID}
+          </h2>
+          <div className="flex space-x-2">{StatusComponent(data.status)}</div>
         </div>
         <Button
           variant="outline"
-          className="rounded-xl border-[var(--error-100)] hover:bg-[var(--error-75)] hover:text-[var(--error-400)] text-[var(--error-400)] py-2 px-[14px] w-[113px] h-9 text-sm font-semibold"
+          className="rounded-xl border-[var(--error-100)] text-[var(--error-400)] py-2 px-[14px] w-auto h-9 text-sm font-semibold"
         >
-          Cancel Order
+          {panelType === "transaction" ? "Dispute" : "Cancel Order"}
         </Button>
       </div>
 
-      <DataTable showPagination={showPagination} columns={columnsDetails} data={data} />
+      <DataTable showPagination={showPagination} columns={columnsDetails} data={data ? [data] : []} onRowClick={onRowClick} />
 
-      <DrawerDetailsSection title="Order Details" fields={commonFields} data={item} />
-      <DrawerDetailsSection title="Delivery Details" fields={deliveryFields} data={item} />
+      <DrawerDetailsSection title="Order Details" fields={commonFields} data={data} />
 
-      {panelType === "order" && (
-        <DrawerDetailsSection title="Payment Details" fields={paymentFields} data={item} />
+      {(panelType === "order" || panelType === "delivery") && (
+        <DrawerDetailsSection title="Delivery Details" fields={deliveryFields} data={data} />
+      )}
+
+      {(panelType === "order" || panelType === "transaction") && (
+        <DrawerDetailsSection title="Payment Details" fields={paymentFields} data={data} />
       )}
 
       {panelType === "transaction" && (
-        <div className="mt-8">Transaction details will be displayed here.</div>
+        <DrawerDetailsSection title="Payment Overview" fields={paymentOverview} data={data} />
       )}
     </Drawer>
   );

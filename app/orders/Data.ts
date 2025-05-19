@@ -129,6 +129,24 @@ export const OrderscardContent: ICardContent[] = [
     }
 ];
 
+export const TransactionscardContent: ICardContent[] = [
+    {
+        cardTitle: 'Total Amount Paid',
+        Value: 293000,
+        icon:  deliveryTruck
+    },
+    {
+        cardTitle: 'Outstanding Balance',
+        Value: 30000,
+        icon: ClockCountdown
+    },
+    {
+        cardTitle: 'Late Payment Fee',
+        Value: 5000,
+        icon: deliveryTruck
+    },
+];
+
 export const DeliveriescardContent: ICardContent[] = [
     {
         cardTitle: 'All Deliveries',

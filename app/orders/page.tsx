@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import {ConfigProvider, Flex, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import Cards from "../components/Cards";
-import { OrderscardContent, data } from "./Data";
+import { OrderscardContent} from "./Data";
 import TabContent from "./TabContent";
 import DrawerComponent from "../components/DrawerComponent";
 import { ColumnDef } from "@tanstack/react-table";
@@ -24,16 +24,16 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { columnsDetails } from "../components/ColumnsDetails";
-
-
+import { orderConstant } from "../Constants/Orders";
 
 
 export default function Orders() {
 	const [isMounted, setIsMounted] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [isCreateOrder, setCreateOrder] = useState(false);
+	const [selectedItem, setSelectedItem] = useState<Order | null>(null)
     
     const showDrawer = () => {
         setOpen(true);
@@ -173,27 +173,42 @@ export default function Orders() {
 		{
 			key: '1',
 			label: 'All orders',
-			children: <TabContent columns={columns}  />,
+			children: <TabContent data={orderConstant} columns={columns} onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
 		},
 		{
 			key: '2',
 			label: 'Completed',
-			children: <TabContent columns={columns} status="completed" />,
+			children: <TabContent data={orderConstant} columns={columns} status="completed" onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
 		},
 		{
 			key: '3',
 			label: 'Pending',
-			children: <TabContent columns={columns} status="pending" />,
+			children: <TabContent data={orderConstant} columns={columns} status="pending" onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
 		},
 		{
 			key: '4',
 			label: 'Cancelled',
-			children: <TabContent columns={columns}  status="cancelled" />,
+			children: <TabContent data={orderConstant} columns={columns}  status="cancelled" onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />,
 		},
 		{
 			key: '5',
 			label: 'Recurring',
-			children: <TabContent columns={columns}  status="recurring"/>,
+			children: <TabContent data={orderConstant} columns={columns}  status="recurring" onRowClick={(row) => {
+                setSelectedItem(row);
+                setOpen(true); 
+             }} />
 		},
 	];
 
@@ -240,10 +255,10 @@ export default function Orders() {
 			<DrawerComponent 
 				panelTitle="Order Details" 
 				panelType="order" 
-				panelTypeID="#1234HG" 
+				panelTypeID={selectedItem?.order_number}
 				columnsDetails={columnsDetails} 
 				onClose={onClose } 
-				open={open} data={data.data}
+				open={open} data={selectedItem}
 				showPagination={false} 
 			/>
 			<CreateOrder isCreateOrder={isCreateOrder} onCloseOrder={onCloseOrder} />
