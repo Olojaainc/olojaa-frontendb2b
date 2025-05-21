@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
-import { ApiErrorResponse, ApiResonse, IOrderBreakdown, IOrderDetails } from "@/app/Types/Interfaces/IOrders";
+import { ApiErrorResponse, IOrderBreakdown, IOrderDetails } from "@/app/Types/Interfaces/IOrders";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -7,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useFormik } from "formik";
 import AlertIcon from '@/public/AlertIcon.svg'
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { useApiPost } from "@/app/hooks/useApiPost";
@@ -25,7 +26,7 @@ export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev,
     const {values, handleSubmit, setFieldValue} = formik
     // const [orderBreakdown, setOrderBreakdown] = useState<ApiResonse<IOrderBreakdown>>();
     // const [errors, setError] = useState<ApiErrorResponse>();
-    const { loading, error, data, postApi } = useApiPost<IOrderBreakdown>(); 
+    const {  error, data, postApi } = useApiPost<IOrderBreakdown>(); 
   
     // const getOrderBreakDown = async () => {
       
