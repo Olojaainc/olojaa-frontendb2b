@@ -1,9 +1,21 @@
+'use client';
+import { useState } from "react";
 import DashboardLayout from "../Layouts/DashboardLayout";
+import CreateOrder from "../orders/CreateOrders/createOrders";
 import CreditLine from "./Components/CreditLine";
 import OrderManagement from "./Components/OrderManagement";
 import { logout } from "@/app/Auth/actions";
 
 export default function Dashboard() {
+    const [isCreateOrder, setCreateOrder] = useState(false);
+
+    const handleCreateOrder = () => {
+		setCreateOrder(true);
+	}
+
+	const onCloseOrder = () => {
+        setCreateOrder(false);
+    };
     return(
         <DashboardLayout>
            <div className="flex justify-between p-2 mb-6">
@@ -61,12 +73,13 @@ export default function Dashboard() {
                         <p className="text-xs">vs yesterday</p>
                     </div>
                 </div>
-                <button className="bg-[var(--primary-400)] text-white w-[122px] h-[36px] rounded-xl p-1 text-sm">Make an Order</button>
+                <button onClick={handleCreateOrder} className="bg-[var(--primary-400)] text-white w-[122px] h-[36px] rounded-xl p-1 text-sm">Make an Order</button>
            </div>
            <div className="flex flex-wrap gap-6 justify-between">
                 <CreditLine />
                 <OrderManagement />
            </div>
+           <CreateOrder isCreateOrder={isCreateOrder} onCloseOrder={onCloseOrder} />
         </DashboardLayout>
         
     )

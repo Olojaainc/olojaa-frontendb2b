@@ -10,6 +10,7 @@ import AlertIcon from '@/public/AlertIcon.svg'
 import { useEffect, useState } from "react";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
+import { useApiPost } from "@/app/hooks/useApiPost";
 
 interface IPaymentSummaryProps{
     formik: ReturnType<typeof useFormik<IOrderDetails>>;
@@ -22,50 +23,51 @@ interface IPaymentSummaryProps{
 
 export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev, formik}:IPaymentSummaryProps) {
     const {values, handleSubmit, setFieldValue} = formik
-    const [orderBreakdown, setOrderBreakdown] = useState<ApiResonse<IOrderBreakdown>>();
-    const [errors, setError] = useState<ApiErrorResponse>(); 
+    // const [orderBreakdown, setOrderBreakdown] = useState<ApiResonse<IOrderBreakdown>>();
+    // const [errors, setError] = useState<ApiErrorResponse>();
+    const { loading, error, data, postApi } = useApiPost<IOrderBreakdown>(); 
   
-    const getOrderBreakDown = async () => {
+    // const getOrderBreakDown = async () => {
       
-        try {
-          const res = await fetch('/api/order-breakdown', {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              gas_type_id: values.gas_type_id,
-              quantity: values.quantity,
-            }),
-          });
+    //     try {
+    //       const res = await fetch('/api/order-breakdown', {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //           gas_type_id: values.gas_type_id,
+    //           quantity: values.quantity,
+    //         }),
+    //       });
       
-          const data = await res.json();
+    //       const data = await res.json();
       
-          if (!res.ok) {
-            setError(data);
-            return;
-          }
+    //       if (!res.ok) {
+    //         setError(data);
+    //         return;
+    //       }
       
-          setOrderBreakdown(data);
-        } catch (error: unknown) {
-            console.log('payment summary',error);
-          setError({
-            message: 'Network error. Please try again later.',
-          });
-        }
-    };
+    //       setOrderBreakdown(data);
+    //     } catch (error: unknown) {
+    //         console.log('payment summary',error);
+    //       setError({
+    //         message: 'Network error. Please try again later.',
+    //       });
+    //     }
+    // };
 
     useEffect(() => {
         if (values.gas_type_id && values.quantity) {
-          getOrderBreakDown();
+            postApi('/api/order-breakdown', { gas_type_id: values.gas_type_id, quantity: values.quantity });
         }
     }, [values.gas_type_id, values.quantity]);
 
     useEffect(() => {
-        if (orderBreakdown?.data) {
-            setFieldValue('amount', orderBreakdown?.data.total_price);
+        if (data) {
+            setFieldValue('amount', data.total_price);
         }
-    },[orderBreakdown?.data]);
+    },[data]);
 
 
 
@@ -126,34 +128,34 @@ export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev,
                 <p className="text-xl font-semibold mt-4">Order Summary</p>
                 <div className="w-full content-between grid grid-cols-2 gap-y-4 gap-x-16">
                     <div className=" text-sm font-semibold text-[var(--gray-900)]">Quantity</div>
-                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{orderBreakdown?.data.quantity}KG</div>
+                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{data?.quantity}KG</div>
                     <div className=" text-sm font-semibold text-[var(--gray-900)]">Gas Type</div>
-                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{orderBreakdown?.data.gas_type}</div>
+                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{data?.gas_type}</div>
                     <div className=" text-sm font-semibold text-[var(--gray-900)]">Provider</div>
                     <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{values.gas_provider}</div>
                     <div className=" text-sm font-semibold text-[var(--gray-900)]">Price per KG</div>
-                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)] ">₦{orderBreakdown?.data.price_per_kg.toFixed(2)}</div>
+                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)] ">₦{data?.price_per_kg.toFixed(2)}</div>
                     
                     {values.recurring === 0 && <>
                         <div></div>
                         <div className="flex w-[250px] justify-between ">
                             <p className="text-xl font-semibold text-[var(--gray-400)]">Sub Total</p>
-                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{((orderBreakdown?.data?.total_price ?? 0) - (orderBreakdown?.data?.delivery_fee ?? 0) - (orderBreakdown?.data?.service_charge ?? 0)).toFixed(2)}</p>
+                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{((data?.total_price ?? 0) - (data?.delivery_fee ?? 0) - (data?.service_charge ?? 0)).toFixed(2)}</p>
                         </div>
                         <div></div>
                         <div className="flex w-[250px] justify-between ">
                             <p className="text-xl font-semibold text-[var(--gray-400)]">Delivery Fee</p>
-                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{orderBreakdown?.data.delivery_fee.toFixed(2)}</p>
+                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{data?.delivery_fee.toFixed(2)}</p>
                         </div>
                         <div></div>
                         <div className="flex space-x-2 w-auto justify-end ">
                             <p className="text-xl font-semibold text-[var(--gray-400)]">VAT</p>
-                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{orderBreakdown?.data.service_charge.toFixed(2)}</p>
+                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{data?.service_charge.toFixed(2)}</p>
                         </div>
                         <div></div>
                         <div className="flex w-[250px] justify-between ">
                             <p className="text-2xl font-bold text-[var(--gray-600)]">Total</p>
-                            <p className="text-2xl font-bold text-[var(--gray-600)]">₦{orderBreakdown?.data.total_price.toFixed(2)}</p>
+                            <p className="text-2xl font-bold text-[var(--gray-600)]">₦{data?.total_price.toFixed(2)}</p>
                         </div>
                     </>}
                     { values.recurring === 1 && <div className="w-[550px] bg-[var(--blue-75)] flex flex-col gap-2 px-4 py-3 border border-blue-400 rounded-xl">
@@ -171,13 +173,13 @@ export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev,
                                 <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">After {values.end_after} occurencies</div>
                             }
                             <div className=" text-xs font-semibold text-[var(--gray-900)]">Individual Order Total</div>
-                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)] ">₦{((orderBreakdown?.data?.total_price ?? 0) - (orderBreakdown?.data?.delivery_fee ?? 0) - (orderBreakdown?.data?.service_charge ?? 0)).toFixed(2)}</div>
+                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)] ">₦{((data?.total_price ?? 0) - (data?.delivery_fee ?? 0) - (data?.service_charge ?? 0)).toFixed(2)}</div>
                             <div className=" text-xs font-semibold text-[var(--gray-900)]">Delivery Fee per Order</div>
-                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(orderBreakdown?.data.delivery_fee ?? 0).toFixed(2) }</div>
+                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(data?.delivery_fee ?? 0).toFixed(2) }</div>
                             <div className=" text-xs font-semibold text-[var(--gray-900)]">VAT per Order</div>
-                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(orderBreakdown?.data.service_charge ?? 0).toFixed(2)}</div>
+                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(data?.service_charge ?? 0).toFixed(2)}</div>
                             <div className=" text-xs font-semibold text-[var(--gray-900)]">Grand Total</div>
-                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(orderBreakdown?.data.total_price ?? 0).toFixed(2)}</div>
+                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(data?.total_price ?? 0).toFixed(2)}</div>
                         </div>
                     </div>
                     }
@@ -207,7 +209,7 @@ export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev,
                     <Alert className="flex items-center h-[56px] border border-[var(--primary-400)] bg-[var(--primary-50)] " variant="default">
                         <AlertCircle color="#FF6A00" className="h-4 w-4" />
                         <AlertDescription className="text-[var(--gray-600)] font-medium text-sm">
-                            {orderErrors.message || errors?.message}
+                            {orderErrors.message || error?.message}
                         </AlertDescription>
                     </Alert>
                 )}
