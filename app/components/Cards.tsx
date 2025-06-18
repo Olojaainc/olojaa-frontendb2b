@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Flex } from "antd";
 import Image from "next/image";
 import { ICardContent } from "../Types/Interfaces/ICard";

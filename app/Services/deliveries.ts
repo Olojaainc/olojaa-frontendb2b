@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiResponse, Order } from "../Types/Interfaces/IOrders";
-import { ITransaction } from "../Types/Interfaces/ITransactions";
 
 
 export const deliveriesApi = createApi({

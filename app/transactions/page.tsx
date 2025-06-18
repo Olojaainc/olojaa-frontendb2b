@@ -16,7 +16,6 @@ import { useState } from "react";
 import { ITransaction } from "../Types/Interfaces/ITransactions";
 import { IoMdClose } from "react-icons/io";
 import { DataTable } from "../components/DataTable";
-import { transactionConstant } from "../Constants/Transactions";
 import Dispute from "./dispute";
 import { useGetTransactionsQuery } from "../Services/transaction";
 
@@ -24,7 +23,7 @@ export default function Transactions() {
     const [open, setOpen] = useState(false);
     const [openDispute, setOpenDispute] = useState(false);
     const [selectedItem, setSelectedItem] = useState<ITransaction | null>(null)
-    const {data, error, isLoading} = useGetTransactionsQuery();
+    const {data} = useGetTransactionsQuery();
 
 
     const showDrawer = () => {

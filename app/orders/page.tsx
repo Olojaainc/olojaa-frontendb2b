@@ -35,8 +35,8 @@ export default function Orders() {
 	const [open, setOpen] = useState(false);
 	const [isCreateOrder, setCreateOrder] = useState(false);
 	const [selectedItem, setSelectedItem] = useState<Order | null>(null)
-	const { data, error, isLoading } = useGetOrdersQuery();
-	const {data:orderManagement, error:orderManagementError, isLoading:isOrderManagementLoading} = useGetOrderManagementQuery();
+	const { data, isLoading } = useGetOrdersQuery();
+	const {data:orderManagement} = useGetOrderManagementQuery();
 
 	console.log(orderManagement);
 	console.log('loading', isLoading)

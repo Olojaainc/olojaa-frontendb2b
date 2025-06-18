@@ -16,7 +16,6 @@ import { StatusComponent } from "../orders/StatusComponent";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, MoreHorizontal } from "lucide-react";
-import { orderConstant } from "../Constants/Orders";
 import { useGetDeliveriesQuery } from "../Services/deliveries";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -24,7 +23,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 export default function Deliveries() {
     const [open, setOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Order | null>(null)
-    const {data, error, isError, isLoading} = useGetDeliveriesQuery()
+    const {data, error, isError} = useGetDeliveriesQuery()
 
     console.log('data',data);
     console.log('error',error);
@@ -214,7 +213,11 @@ export default function Deliveries() {
                     <Alert className="flex items-center h-[56px] border border-[var(--primary-400)] bg-[var(--primary-50)] " variant="default">
                         <AlertCircle color="#FF6A00" className="h-4 w-4" />
                         <AlertDescription className="text-[var(--gray-600)] font-medium text-sm">
-                            {error.error}
+                            {typeof error === 'string'
+                                ? error
+                                : (error && 'status' in error && typeof error.status === 'number'
+                                    ? `Error ${error.status}${'data' in error && error.data ? `: ${JSON.stringify(error.data)}` : ''}`
+                                    : 'An unexpected error occurred')}
                         </AlertDescription>
                     </Alert>
                 )}
