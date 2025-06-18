@@ -25,14 +25,16 @@ interface DataTableProps<T extends object> {
 }
 
 export function DataTable<T extends object>({
-  columns,
-  data,
+  columns = [],
+  data = [],
   showPagination = true,
   onRowClick,
 }: DataTableProps<T>) {
+
   const table = useReactTable({
     data,
     columns,
+    getRowId: (_, index) => index.toString(),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   })

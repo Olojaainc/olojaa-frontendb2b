@@ -41,6 +41,37 @@ export interface ApiResonse<T>{
 	errors?: ApiErrorResponse;
 }
 
+export interface PaginationLink {
+	url: string | null;
+	label: string;
+	active: boolean;
+  }
+  
+  export interface PaginationMeta {
+	current_page: number;
+	from: number;
+	last_page: number;
+	links: PaginationLink[];
+	path: string;
+	per_page: number;
+	to: number;
+	total: number;
+  }
+  
+  export interface PaginationLinks {
+	first: string;
+	last: string;
+	prev: string | null;
+	next: string | null;
+  }
+  export interface ApiResponse<T extends object> {
+	data: T;
+	links: PaginationLinks;
+	meta: PaginationMeta;
+	status: boolean;
+	message: string;
+  }
+
 export interface IOrderBreakdown{
 	gas_type: string;
 	quantity: number;
@@ -48,6 +79,14 @@ export interface IOrderBreakdown{
 	price_per_kg: number;
 	service_charge: number;
 	total_price:number;
+}
+
+export interface IOrderManagement{
+	pendingOrders: number;
+	rejectedOrders: number;
+	completedOrders: number;
+	recurringOrders: number;
+	totalOrders: number;
 }
 
 type errors = 'email' | 'password' | 'payment_method' | 'address' | 'delivery_date' | 

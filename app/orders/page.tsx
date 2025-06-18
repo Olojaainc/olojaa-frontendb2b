@@ -26,7 +26,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { columnsDetails } from "../components/ColumnsDetails";
-import { orderConstant } from "../Constants/Orders";
+// import { data } from "../Constants/Orders";
+import { useGetOrderManagementQuery, useGetOrdersQuery } from "../Services/orders";
 
 
 export default function Orders() {
@@ -34,6 +35,11 @@ export default function Orders() {
 	const [open, setOpen] = useState(false);
 	const [isCreateOrder, setCreateOrder] = useState(false);
 	const [selectedItem, setSelectedItem] = useState<Order | null>(null)
+	const { data, error, isLoading } = useGetOrdersQuery();
+	const {data:orderManagement, error:orderManagementError, isLoading:isOrderManagementLoading} = useGetOrderManagementQuery();
+
+	console.log(orderManagement);
+	console.log('loading', isLoading)
     
     const showDrawer = () => {
         setOpen(true);
@@ -173,42 +179,75 @@ export default function Orders() {
 		{
 			key: '1',
 			label: 'All orders',
-			children: <TabContent data={orderConstant} columns={columns} onRowClick={(row) => {
+			children: <TabContent data={data?.data} columns={columns} onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
-             }} />,
+             }} 
+			 getSortValues={(item) => ({
+				total_amount: parseFloat(item.total_amount ?? '0'),
+				quantity: item.quantity ?? 0,
+				created_at: new Date(item.created_at ?? '').getTime() || 0,
+			  })}
+			 />,
 		},
 		{
 			key: '2',
 			label: 'Completed',
-			children: <TabContent data={orderConstant} columns={columns} status="completed" onRowClick={(row) => {
+			children: <TabContent data={data?.data} columns={columns} status="completed" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
-             }} />,
+             }}
+			 getSortValues={(item) => ({
+				total_amount: parseFloat(item.total_amount ?? '0'),
+				quantity: item.quantity ?? 0,
+				created_at: new Date(item.created_at ?? '').getTime() || 0,
+			  })}
+			 />,
 		},
 		{
 			key: '3',
 			label: 'Pending',
-			children: <TabContent data={orderConstant} columns={columns} status="pending" onRowClick={(row) => {
+			children: <TabContent data={data?.data} columns={columns} status="pending" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
-             }} />,
+             }} 
+			 getSortValues={(item) => ({
+				total_amount: parseFloat(item.total_amount ?? '0'),
+				quantity: item.quantity ?? 0,
+				created_at: new Date(item.created_at ?? '').getTime() || 0,
+			  })}
+			 
+			 />,
 		},
 		{
 			key: '4',
 			label: 'Cancelled',
-			children: <TabContent data={orderConstant} columns={columns}  status="cancelled" onRowClick={(row) => {
+			children: <TabContent data={data?.data} columns={columns}  status="cancelled" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
-             }} />,
+             }} 
+			 
+			 getSortValues={(item) => ({
+				total_amount: parseFloat(item.total_amount ?? '0'),
+				quantity: item.quantity ?? 0,
+				created_at: new Date(item.created_at ?? '').getTime() || 0,
+			  })}
+			 />,
 		},
 		{
 			key: '5',
 			label: 'Recurring',
-			children: <TabContent data={orderConstant} columns={columns}  status="recurring" onRowClick={(row) => {
+			children: <TabContent data={data?.data} columns={columns}  status="recurring" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
-             }} />
+             }} 
+			 getSortValues={(item) => ({
+				total_amount: parseFloat(item.total_amount ?? '0'),
+				quantity: item.quantity ?? 0,
+				created_at: new Date(item.created_at ?? '').getTime() || 0,
+			  })}
+			 
+			 />
 		},
 	];
 
@@ -219,20 +258,24 @@ export default function Orders() {
                 <Flex className="flex gap-4 justify-between mt-4">
 					<Cards 
 						backgroundGradient="bg-custom-radial-orange"
+						data={orderManagement?.data.totalOrders}
 						content={OrderscardContent[0]}
 					/>
 					<Cards 
 						backgroundGradient="bg-custom-radial-green"
 						content={OrderscardContent[1]}
+						data={ orderManagement?.data.completedOrders}
 					/>
 					<Cards 
 						backgroundGradient="bg-custom-radial-yellow"
 						content={OrderscardContent[2]}
+						data={orderManagement?.data.pendingOrders}
 					/>
 
 					<Cards 
 						backgroundGradient="bg-custom-radial-neon"
 						content={OrderscardContent[3]}
+						data={orderManagement?.data.recurringOrders}
 					/>
                 </Flex>
 				<ConfigProvider

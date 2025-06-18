@@ -15,13 +15,19 @@ import { formatDateLong } from "../Utils/dateFormat";
 import { StatusComponent } from "../orders/StatusComponent";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
+import { AlertCircle, MoreHorizontal } from "lucide-react";
 import { orderConstant } from "../Constants/Orders";
+import { useGetDeliveriesQuery } from "../Services/deliveries";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 
 export default function Deliveries() {
     const [open, setOpen] = useState(false);
-        const [selectedItem, setSelectedItem] = useState<Order | null>(null)
+    const [selectedItem, setSelectedItem] = useState<Order | null>(null)
+    const {data, error, isError, isLoading} = useGetDeliveriesQuery()
+
+    console.log('data',data);
+    console.log('error',error);
 
     const showDrawer = () => {
         setOpen(true);
@@ -156,7 +162,7 @@ export default function Deliveries() {
         {
             key: '1',
             label: 'All Deliveries',
-            children: <TabContent data={orderConstant} columns={columns} onRowClick={(row) => {
+            children: <TabContent data={data?.data} columns={columns} onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
@@ -164,7 +170,7 @@ export default function Deliveries() {
         {
             key: '2',
             label: 'Pending',
-            children: <TabContent data={orderConstant} columns={columns}  status="Pending" onRowClick={(row) => {
+            children: <TabContent data={data?.data} columns={columns}  status="Pending" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
@@ -172,7 +178,7 @@ export default function Deliveries() {
         {
             key: '3',
             label: 'In Transit',
-            children: <TabContent data={orderConstant} columns={columns}  status="transit" onRowClick={(row) => {
+            children: <TabContent data={data?.data} columns={columns}  status="transit" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
@@ -180,7 +186,7 @@ export default function Deliveries() {
         {
             key: '4',
             label: 'Cancelled',
-            children: <TabContent data={orderConstant} columns={columns} status="cancelled" onRowClick={(row) => {
+            children: <TabContent data={data?.data} columns={columns} status="cancelled" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
@@ -188,7 +194,7 @@ export default function Deliveries() {
         {
             key: '5',
             label: 'Recurring',
-            children: <TabContent data={orderConstant} columns={columns}  status="recurring" onRowClick={(row) => {
+            children: <TabContent data={data?.data} columns={columns}  status="recurring" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
@@ -196,7 +202,7 @@ export default function Deliveries() {
         {
             key: '6',
             label: 'Delivered',
-            children: <TabContent data={orderConstant} columns={columns}  status="delivered" onRowClick={(row) => {
+            children: <TabContent data={data?.data} columns={columns}  status="delivered" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
@@ -204,25 +210,37 @@ export default function Deliveries() {
     ];
     return(
         <DashboardLayout>
+            {isError && (
+                    <Alert className="flex items-center h-[56px] border border-[var(--primary-400)] bg-[var(--primary-50)] " variant="default">
+                        <AlertCircle color="#FF6A00" className="h-4 w-4" />
+                        <AlertDescription className="text-[var(--gray-600)] font-medium text-sm">
+                            {error.error}
+                        </AlertDescription>
+                    </Alert>
+                )}
             <div className=" flex flex-col w-full gap-6 bg-white h-full p-8 rounded-[20px]">
                 <DashboardNavigation title="Deliveries" isVisible={false}/>
                 <div className="flex gap-4 items-center justify-between mt-4">
                     <Cards 
                         backgroundGradient="bg-custom-radial-orange"
                         content={DeliveriescardContent[0]}
+                        data={''}
                     />
                     <Cards 
                         backgroundGradient="bg-custom-radial-green"
                         content={DeliveriescardContent[1]}
+                        data={''}
                     />
                     <Cards 
                         backgroundGradient="bg-custom-radial-yellow"
                         content={DeliveriescardContent[2]}
+                        data={''}
                     />
 
                     <Cards 
                         backgroundGradient="bg-custom-radial-neon"
                         content={DeliveriescardContent[3]}
+                        data={''}
                     />
                 </div>
                 <ConfigProvider
