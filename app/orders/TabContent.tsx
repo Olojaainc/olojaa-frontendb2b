@@ -7,6 +7,7 @@ import { Check} from "lucide-react"
 import Filter from "./Filter";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -18,7 +19,7 @@ import {
 interface ITabContent<T extends object> {
 	status?: string
 	columns: ColumnDef<T>[]
-	data: T[]
+	data: T[] | undefined
 	getSortValues?: (item: T) => {
 		total_amount: number;
 		quantity: number;
@@ -42,8 +43,6 @@ export default function TabContent<T extends object>({status, columns, data, get
         return [...filteredItems].sort((a, b) => {
             const aValues = getSortValues(a);
             const bValues = getSortValues(b);
-
-			console.log(aValues)
 
             switch (sortOption) {
                 case "low-to-high":

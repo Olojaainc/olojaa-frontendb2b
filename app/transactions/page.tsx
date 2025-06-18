@@ -16,13 +16,14 @@ import { useState } from "react";
 import { ITransaction } from "../Types/Interfaces/ITransactions";
 import { IoMdClose } from "react-icons/io";
 import { DataTable } from "../components/DataTable";
-import { transactionConstant } from "../Constants/Transactions";
 import Dispute from "./dispute";
+import { useGetTransactionsQuery } from "../Services/transaction";
 
 export default function Transactions() {
     const [open, setOpen] = useState(false);
     const [openDispute, setOpenDispute] = useState(false);
     const [selectedItem, setSelectedItem] = useState<ITransaction | null>(null)
+    const {data} = useGetTransactionsQuery();
 
 
     const showDrawer = () => {
@@ -176,7 +177,7 @@ export default function Transactions() {
             {
                 key: '1',
                 label: 'All Transactions',
-                children: <TabContent data={transactionConstant} columns={columns}  onRowClick={(row) => {
+                children: <TabContent data={data?.data} columns={columns}  onRowClick={(row) => {
                     setSelectedItem(row);
                     setOpen(true);
                   }}  />,
@@ -184,7 +185,7 @@ export default function Transactions() {
             {
                 key: '2',
                 label: 'Processing',
-                children: <TabContent data={transactionConstant} columns={columns} status="pending" onRowClick={(row) => {
+                children: <TabContent data={data?.data} columns={columns} status="pending" onRowClick={(row) => {
                     setSelectedItem(row);
                     setOpen(true); 
                  }} />,
@@ -192,7 +193,7 @@ export default function Transactions() {
             {
                 key: '3',
                 label: 'Failed',
-                children: <TabContent data={transactionConstant} columns={columns} status="cancelled" onRowClick={(row) => {
+                children: <TabContent data={data?.data} columns={columns} status="cancelled" onRowClick={(row) => {
                     setSelectedItem(row);
                     setOpen(true); 
                  }} />,
@@ -200,7 +201,7 @@ export default function Transactions() {
             {
                 key: '4',
                 label: 'Successful',
-                children: <TabContent data={transactionConstant} columns={columns}  status="completed" onRowClick={(row) => {
+                children: <TabContent data={data?.data} columns={columns}  status="completed" onRowClick={(row) => {
                     setSelectedItem(row);
                     setOpen(true); 
                  }} />,
@@ -215,16 +216,19 @@ export default function Transactions() {
                         backgroundGradient="bg-custom-radial-orange"
                         content={TransactionscardContent[0]}
                         showCards={false}
+                        data={''}
                     />
                     <Cards 
                         backgroundGradient="bg-custom-radial-green"
                         content={TransactionscardContent[1]}
                         showCards={false}
+                        data={''}
                     />
                     <Cards 
                         backgroundGradient="bg-custom-radial-yellow"
                         content={TransactionscardContent[2]}
                         showCards={false}
+                        data={''}
                     />
                     {/* <Cards 
                         backgroundGradient="bg-custom-radial-blue"
