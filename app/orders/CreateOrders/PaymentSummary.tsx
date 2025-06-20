@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { ApiErrorResponse, IOrderBreakdown, IOrderDetails } from "@/app/Types/Interfaces/IOrders";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -9,9 +8,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useFormik } from "formik";
 import AlertIcon from '@/public/AlertIcon.svg'
 import { useEffect } from "react";
-import { AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { useApiPost } from "@/app/hooks/useApiPost";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/app/hooks/getError";
 
 interface IPaymentSummaryProps{
     formik: ReturnType<typeof useFormik<IOrderDetails>>;
@@ -22,11 +22,20 @@ interface IPaymentSummaryProps{
 }
 
 
-export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev, formik}:IPaymentSummaryProps) {
+export default function PaymentSummary({onClose, isLoading, onPrev, formik}:IPaymentSummaryProps) {
     const {values, handleSubmit, setFieldValue} = formik
     // const [orderBreakdown, setOrderBreakdown] = useState<ApiResonse<IOrderBreakdown>>();
     // const [errors, setError] = useState<ApiErrorResponse>();
     const {  error, data, postApi } = useApiPost<IOrderBreakdown>(); 
+
+    useEffect(() => {
+        if(error){
+            const errorMessage = getErrorMessage(error);
+            toast.error("Error Occured!", {
+                description: errorMessage,
+            });
+        }
+    },[error])
   
     // const getOrderBreakDown = async () => {
       
@@ -206,15 +215,6 @@ export default function PaymentSummary({onClose, isLoading, orderErrors, onPrev,
                         <Label className="text-sm font-normal text-[var(--gray-600)]" htmlFor="r2">Pay with Credit Line</Label>
                     </div> */}
                 </RadioGroup>
-                {orderErrors && (
-                    <Alert className="flex items-center h-[56px] border border-[var(--primary-400)] bg-[var(--primary-50)] " variant="default">
-                        <AlertCircle color="#FF6A00" className="h-4 w-4" />
-                        <AlertDescription className="text-[var(--gray-600)] font-medium text-sm">
-                            {orderErrors.message || error?.message}
-                        </AlertDescription>
-                    </Alert>
-                )}
-
             </div>
             <hr className="my-4" style={{ border: '1px thin #D1D5DB' }}/>
             <DialogFooter className="sm:justify-end mt-4">

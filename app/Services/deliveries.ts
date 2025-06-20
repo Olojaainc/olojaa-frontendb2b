@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiResponse, Order } from "../Types/Interfaces/IOrders";
+import { IDeliveryManagement } from "../Types/Interfaces/IDeliveries";
 
 
 export const deliveriesApi = createApi({
@@ -14,8 +15,11 @@ export const deliveriesApi = createApi({
         query: () => '/business/deliveries',
       }),
 
+      getDeliveryManagement: builder.query<ApiResponse<IDeliveryManagement>, void>({
+        query: () => '/business/delivery-breakdown',
+      })
   
     }),
 });
 
-export const {useGetDeliveriesQuery} = deliveriesApi
+export const {useGetDeliveriesQuery, useGetDeliveryManagementQuery} = deliveriesApi

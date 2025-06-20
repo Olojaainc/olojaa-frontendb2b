@@ -123,3 +123,266 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* toaster.css */
+
+/* Base toast styles */
+.custom-toast {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease-in-out;
+  font-family: var(--font-figtree);
+}
+
+.custom-toast:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Error toast styles - Red theme */
+.toast-error {
+  background: #fef2f2 !important;
+  border: 1px solid #fca5a5 !important;
+  color: #dc2626 !important;
+}
+
+.toast-error [data-icon] {
+  color: #dc2626 !important;
+}
+
+.toast-error [data-title] {
+  color: #dc2626 !important;
+  font-weight: 600;
+}
+
+.toast-error [data-description] {
+  color: #991b1b !important;
+}
+
+.toast-error [data-button] {
+  background: #dc2626 !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.toast-error [data-button]:hover {
+  background: #b91c1c !important;
+}
+
+.toast-error [data-close-button] {
+  color: #dc2626 !important;
+  opacity: 0.7;
+}
+
+.toast-error [data-close-button]:hover {
+  opacity: 1;
+  background: rgba(220, 38, 38, 0.1);
+}
+
+/* Success toast styles - Green theme */
+.toast-success {
+  background: #f0fdf4 !important;
+  border: 1px solid #86efac !important;
+  color: #16a34a !important;
+}
+
+.toast-success [data-icon] {
+  color: #16a34a !important;
+}
+
+.toast-success [data-title] {
+  color: #16a34a !important;
+  font-weight: 600;
+}
+
+.toast-success [data-description] {
+  color: #15803d !important;
+}
+
+.toast-success [data-button] {
+  background: #16a34a !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.toast-success [data-button]:hover {
+  background: #15803d !important;
+}
+
+.toast-success [data-close-button] {
+  color: #16a34a !important;
+  opacity: 0.7;
+}
+
+.toast-success [data-close-button]:hover {
+  opacity: 1;
+  background: rgba(22, 163, 74, 0.1);
+}
+
+/* Warning toast styles - Yellow/Orange theme */
+.toast-warning {
+  background: #fefce8 !important;
+  border: 1px solid #fde047 !important;
+  color: #ca8a04 !important;
+}
+
+.toast-warning [data-icon] {
+  color: #ca8a04 !important;
+}
+
+.toast-warning [data-title] {
+  color: #ca8a04 !important;
+  font-weight: 600;
+}
+
+.toast-warning [data-description] {
+  color: #a16207 !important;
+}
+
+.toast-warning [data-button] {
+  background: #ca8a04 !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.toast-warning [data-button]:hover {
+  background: #a16207 !important;
+}
+
+.toast-warning [data-close-button] {
+  color: #ca8a04 !important;
+  opacity: 0.7;
+}
+
+.toast-warning [data-close-button]:hover {
+  opacity: 1;
+  background: rgba(202, 138, 4, 0.1);
+}
+
+/* Info toast styles - Blue theme */
+.toast-info {
+  background: #eff6ff !important;
+  border: 1px solid #93c5fd !important;
+  color: #2563eb !important;
+}
+
+.toast-info [data-icon] {
+  color: #2563eb !important;
+}
+
+.toast-info [data-title] {
+  color: #2563eb !important;
+  font-weight: 600;
+}
+
+.toast-info [data-description] {
+  color: #1d4ed8 !important;
+}
+
+.toast-info [data-button] {
+  background: #2563eb !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.toast-info [data-button]:hover {
+  background: #1d4ed8 !important;
+}
+
+.toast-info [data-close-button] {
+  color: #2563eb !important;
+  opacity: 0.7;
+}
+
+.toast-info [data-close-button]:hover {
+  opacity: 1;
+  background: rgba(37, 99, 235, 0.1);
+}
+
+/* Loading toast styles - Gray theme */
+.toast-loading {
+  background: #f9fafb !important;
+  border: 1px solid #d1d5db !important;
+  color: #6b7280 !important;
+}
+
+.toast-loading [data-icon] {
+  color: #6b7280 !important;
+}
+
+.toast-loading [data-title] {
+  color: #6b7280 !important;
+  font-weight: 600;
+}
+
+.toast-loading [data-description] {
+  color: #4b5563 !important;
+}
+
+.toast-loading [data-close-button] {
+  color: #6b7280 !important;
+  opacity: 0.7;
+}
+
+.toast-loading [data-close-button]:hover {
+  opacity: 1;
+  background: rgba(107, 114, 128, 0.1);
+}
+
+/* General improvements */
+[data-sonner-toaster] {
+  z-index: 9999;
+}
+
+[data-sonner-toast] {
+  font-family: var(--font-figtree) !important;
+}
+
+/* Animation enhancements */
+[data-sonner-toast][data-mounted="true"] {
+  animation: slideIn 0.3s ease-out;
+}
+
+[data-sonner-toast][data-removed="true"] {
+  animation: slideOut 0.2s ease-in;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}

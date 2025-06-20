@@ -1,16 +1,18 @@
 import { Drawer } from "antd";
 import { IoMdClose } from "react-icons/io";
-import { Check } from "lucide-react";
+import { Check, Loader2Icon } from "lucide-react";
 import { IDisputePayload, ITransaction } from "../Types/Interfaces/ITransactions";
 import { useFormik } from "formik";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DisputeTypesConstant } from "../Constants/DisputeTypes";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { useCreateDisputeMutation, useGetDisputeTypesQuery } from "../Services/transaction";
+import { toast } from "sonner";
+import { getErrorMessage } from "../hooks/getError";
 
 interface IDisputeProps {
   onCloseDispute: () => void;
@@ -20,6 +22,27 @@ interface IDisputeProps {
 
 export default function Dispute({ onCloseDispute, openDispute, selectedItem }: IDisputeProps) {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const {data, isError, error} = useGetDisputeTypesQuery();
+    const [createDispute,  { isLoading, isSuccess:isCreateDisputeSuccess, 
+        isError:isDisputeError, error:disputeError}] = useCreateDisputeMutation()
+
+    useEffect(() => {
+        if (isError || isDisputeError && error || disputeError) {
+            const errorMessage = getErrorMessage(error);
+            toast.error("Error Occured!", {
+                description: errorMessage,
+            });
+        }
+    }, [isError, error, isDisputeError, disputeError]);
+
+    useEffect(() => {
+        if(isCreateDisputeSuccess){
+            toast.success('Dispute created Successfully!')
+            onCloseDispute();
+        }
+    },[isCreateDisputeSuccess]);
+
+
     const {values, handleChange, handleSubmit, setFieldValue} = useFormik({
         initialValues: {
         dispute_type_id: 0,
@@ -27,7 +50,7 @@ export default function Dispute({ onCloseDispute, openDispute, selectedItem }: I
         attachments: []
         } as IDisputePayload,
         onSubmit: (values) => {
-        console.log(values);
+            createDispute({ disputePayload: values });
         }
     });
 
@@ -46,7 +69,7 @@ export default function Dispute({ onCloseDispute, openDispute, selectedItem }: I
                 <div className="flex flex-col space-y-4">
                     <p>Select Dispute Type</p>
                     <div className="flex flex-col space-y-4">
-                        {DisputeTypesConstant.map((dispute) => (
+                        {data?.data.map((dispute) => (
                             <div key={dispute.id} className="flex items-center space-x-2">
                                 <Checkbox
                                     id={`chk-opt-${dispute.id}`}
@@ -120,7 +143,7 @@ export default function Dispute({ onCloseDispute, openDispute, selectedItem }: I
                     Cancel
                 </Button>
                 <Button onClick={() => handleSubmit()} variant={'outline'} type="submit" className="rounded-xl w-28 h-9 py-2 px-4 bg-[var(--primary-400)] hover:text-white text-white hover:bg-[var(--primary-500)] text-sm">
-                    Send Dispute
+                   { isLoading ? <Loader2Icon className="animate-spin" /> : 'Send Dispute' }
                 </Button>
                
             </div>

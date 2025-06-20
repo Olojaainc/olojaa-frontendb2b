@@ -11,6 +11,5 @@ export async function POST(request: Request) {
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 401 });
   }
-  
 
 }

@@ -26,11 +26,26 @@ export interface ITransactionMeta {
     meta: ITransactionMeta;
   }
 
+  export interface ITransactionBreakdown{
+    pendingTransactions: number;
+    successfulTransactions: number
+  }
+
   export interface IDisputeTypes {
     id: number;
     name: string;
     description: string;
   }
+
+  export interface IDispute {
+    dispute_type_id: string;
+    description: string;
+    attachments: string[];
+    status: string;
+    updated_at: string;
+    created_at: string;
+    id: number;
+}
 
   export interface IDisputePayload{
     attachments: File[];

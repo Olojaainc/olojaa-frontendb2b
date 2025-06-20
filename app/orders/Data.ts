@@ -131,12 +131,12 @@ export const OrderscardContent: ICardContent[] = [
 
 export const TransactionscardContent: ICardContent[] = [
     {
-        cardTitle: 'Total Amount Paid',
+        cardTitle: 'Successful Transactions',
         Value: 293000,
         icon:  deliveryTruck
     },
     {
-        cardTitle: 'Outstanding Balance',
+        cardTitle: 'Pending Transactions',
         Value: 30000,
         icon: ClockCountdown
     },

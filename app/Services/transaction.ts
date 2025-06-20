@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiResponse } from "../Types/Interfaces/IOrders";
-import { ITransaction } from "../Types/Interfaces/ITransactions";
+import { IDispute, IDisputePayload, IDisputeTypes, ITransaction, ITransactionBreakdown } from "../Types/Interfaces/ITransactions";
 
 
 export const transactionsApi = createApi({
@@ -15,8 +15,23 @@ export const transactionsApi = createApi({
         query: () => '/transactions',
       }),
 
-  
+       getTransactionsBreakdown: builder.query<ApiResponse<ITransactionBreakdown>, void>({
+        query: () => 'business/transaction-breakdown',
+      }),
+
+      getDisputeTypes: builder.query<ApiResponse<IDisputeTypes[]>, void>({
+        query: () => 'business/dispute-types'
+      }),
+
+      createDispute: builder.mutation<ApiResponse<IDispute>, {disputePayload:IDisputePayload}>({
+          query: ({disputePayload}) => ({
+            url: 'business/create-dispute',
+            method: 'POST',
+            body: disputePayload
+          })
+      })
     }),
 });
 
-export const {useGetTransactionsQuery} = transactionsApi
+export const {useGetTransactionsQuery,useGetDisputeTypesQuery, 
+  useCreateDisputeMutation, useGetTransactionsBreakdownQuery} = transactionsApi
