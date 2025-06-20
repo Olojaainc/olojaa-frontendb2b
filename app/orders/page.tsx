@@ -26,7 +26,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { columnsDetails } from "../components/ColumnsDetails";
-// import { data } from "../Constants/Orders";
 import { useGetOrderManagementQuery, useGetOrdersQuery } from "../Services/orders";
 
 
@@ -179,7 +178,7 @@ export default function Orders() {
 		{
 			key: '1',
 			label: 'All orders',
-			children: <TabContent data={data?.data} columns={columns} onRowClick={(row) => {
+			children: <TabContent isLoading={isLoading} data={data?.data} columns={columns} onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} 
@@ -193,7 +192,7 @@ export default function Orders() {
 		{
 			key: '2',
 			label: 'Completed',
-			children: <TabContent data={data?.data} columns={columns} status="completed" onRowClick={(row) => {
+			children: <TabContent isLoading={isLoading} data={data?.data} columns={columns} status="completed" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }}
@@ -207,7 +206,7 @@ export default function Orders() {
 		{
 			key: '3',
 			label: 'Pending',
-			children: <TabContent data={data?.data} columns={columns} status="pending" onRowClick={(row) => {
+			children: <TabContent isLoading={isLoading} data={data?.data} columns={columns} status="pending" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} 
@@ -222,7 +221,7 @@ export default function Orders() {
 		{
 			key: '4',
 			label: 'Cancelled',
-			children: <TabContent data={data?.data} columns={columns}  status="cancelled" onRowClick={(row) => {
+			children: <TabContent isLoading={isLoading} data={data?.data} columns={columns}  status="cancelled" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} 
@@ -237,7 +236,7 @@ export default function Orders() {
 		{
 			key: '5',
 			label: 'Recurring',
-			children: <TabContent data={data?.data} columns={columns}  status="recurring" onRowClick={(row) => {
+			children: <TabContent isLoading={isLoading} data={data?.data} columns={columns}  status="recurring" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} 
@@ -260,22 +259,26 @@ export default function Orders() {
 						backgroundGradient="bg-custom-radial-orange"
 						data={orderManagement?.data.totalOrders}
 						content={OrderscardContent[0]}
+						isLoading={isLoading}
 					/>
 					<Cards 
 						backgroundGradient="bg-custom-radial-green"
 						content={OrderscardContent[1]}
 						data={ orderManagement?.data.completedOrders}
+						isLoading={isLoading}
 					/>
 					<Cards 
 						backgroundGradient="bg-custom-radial-yellow"
 						content={OrderscardContent[2]}
 						data={orderManagement?.data.pendingOrders}
+						isLoading={isLoading}
 					/>
 
 					<Cards 
 						backgroundGradient="bg-custom-radial-neon"
 						content={OrderscardContent[3]}
 						data={orderManagement?.data.recurringOrders}
+						isLoading={isLoading}
 					/>
                 </Flex>
 				<ConfigProvider

@@ -5,9 +5,8 @@ import DashboardNavigation from "../components/DashboardNavigation";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import { DeliveriescardContent } from "../orders/Data";
 import TabContent from "../orders/TabContent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DrawerComponent from "../components/DrawerComponent";
-// import { columnsDetails } from "../orders/page";
 import { ColumnDef } from "@tanstack/react-table";
 import { Order } from "../Types/Interfaces/IOrders";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,18 +14,26 @@ import { formatDateLong } from "../Utils/dateFormat";
 import { StatusComponent } from "../orders/StatusComponent";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, MoreHorizontal } from "lucide-react";
-import { useGetDeliveriesQuery } from "../Services/deliveries";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { MoreHorizontal } from "lucide-react";
+import { useGetDeliveriesQuery, useGetDeliveryManagementQuery } from "../Services/deliveries";
+import { getErrorMessage } from "../hooks/getError";
+import { toast } from "sonner";
 
 
 export default function Deliveries() {
     const [open, setOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Order | null>(null)
-    const {data, error, isError} = useGetDeliveriesQuery()
+    const {data, error, isLoading, isError} = useGetDeliveriesQuery()
+    const {data:deliveryManagment, error:deliveryManagmentError, isError:isDeliveryManagementError} = useGetDeliveryManagementQuery()
 
-    console.log('data',data);
-    console.log('error',error);
+   useEffect(() => {
+        if (isError || isDeliveryManagementError  && error || deliveryManagmentError) {
+            const errorMessage = getErrorMessage(error);
+            toast.error("Error Occured!", {
+                description: errorMessage,
+            });
+        }
+    }, [isError, error, isDeliveryManagementError, deliveryManagmentError]);
 
     const showDrawer = () => {
         setOpen(true);
@@ -161,7 +168,7 @@ export default function Deliveries() {
         {
             key: '1',
             label: 'All Deliveries',
-            children: <TabContent data={data?.data} columns={columns} onRowClick={(row) => {
+            children: <TabContent isLoading={isLoading} data={data?.data} columns={columns} onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
@@ -169,7 +176,7 @@ export default function Deliveries() {
         {
             key: '2',
             label: 'Pending',
-            children: <TabContent data={data?.data} columns={columns}  status="Pending" onRowClick={(row) => {
+            children: <TabContent isLoading={isLoading} data={data?.data} columns={columns}  status="Pending" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
@@ -177,31 +184,15 @@ export default function Deliveries() {
         {
             key: '3',
             label: 'In Transit',
-            children: <TabContent data={data?.data} columns={columns}  status="transit" onRowClick={(row) => {
-                setSelectedItem(row);
-                setOpen(true); 
-             }} />,
-        },
-        {
-            key: '4',
-            label: 'Cancelled',
-            children: <TabContent data={data?.data} columns={columns} status="cancelled" onRowClick={(row) => {
-                setSelectedItem(row);
-                setOpen(true); 
-             }} />,
-        },
-        {
-            key: '5',
-            label: 'Recurring',
-            children: <TabContent data={data?.data} columns={columns}  status="recurring" onRowClick={(row) => {
+            children: <TabContent isLoading={isLoading} data={data?.data} columns={columns}  status="transit" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
         },
         {
             key: '6',
-            label: 'Delivered',
-            children: <TabContent data={data?.data} columns={columns}  status="delivered" onRowClick={(row) => {
+            label: 'Completed',
+            children: <TabContent isLoading={isLoading} data={data?.data} columns={columns}  status="delivered" onRowClick={(row) => {
                 setSelectedItem(row);
                 setOpen(true); 
              }} />,
@@ -209,41 +200,33 @@ export default function Deliveries() {
     ];
     return(
         <DashboardLayout>
-            {isError && (
-                    <Alert className="flex items-center h-[56px] border border-[var(--primary-400)] bg-[var(--primary-50)] " variant="default">
-                        <AlertCircle color="#FF6A00" className="h-4 w-4" />
-                        <AlertDescription className="text-[var(--gray-600)] font-medium text-sm">
-                            {typeof error === 'string'
-                                ? error
-                                : (error && 'status' in error && typeof error.status === 'number'
-                                    ? `Error ${error.status}${'data' in error && error.data ? `: ${JSON.stringify(error.data)}` : ''}`
-                                    : 'An unexpected error occurred')}
-                        </AlertDescription>
-                    </Alert>
-                )}
             <div className=" flex flex-col w-full gap-6 bg-white h-full p-8 rounded-[20px]">
                 <DashboardNavigation title="Deliveries" isVisible={false}/>
                 <div className="flex gap-4 items-center justify-between mt-4">
                     <Cards 
                         backgroundGradient="bg-custom-radial-orange"
                         content={DeliveriescardContent[0]}
-                        data={''}
+                        data={deliveryManagment?.data.all_deliveries}
+                        isLoading={isLoading}
                     />
                     <Cards 
                         backgroundGradient="bg-custom-radial-green"
                         content={DeliveriescardContent[1]}
-                        data={''}
+                        data={deliveryManagment?.data.in_transit}
+                        isLoading={isLoading}
                     />
                     <Cards 
                         backgroundGradient="bg-custom-radial-yellow"
                         content={DeliveriescardContent[2]}
-                        data={''}
+                        data={deliveryManagment?.data.pending_deliveries}
+                        isLoading={isLoading}
                     />
 
                     <Cards 
                         backgroundGradient="bg-custom-radial-neon"
                         content={DeliveriescardContent[3]}
-                        data={''}
+                        data={deliveryManagment?.data.completed}
+                        isLoading={isLoading}
                     />
                 </div>
                 <ConfigProvider

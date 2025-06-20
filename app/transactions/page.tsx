@@ -12,18 +12,32 @@ import { StatusComponent } from "../orders/StatusComponent";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatDateLong } from "../Utils/dateFormat";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ITransaction } from "../Types/Interfaces/ITransactions";
 import { IoMdClose } from "react-icons/io";
 import { DataTable } from "../components/DataTable";
 import Dispute from "./dispute";
-import { useGetTransactionsQuery } from "../Services/transaction";
+import { useGetTransactionsBreakdownQuery, useGetTransactionsQuery } from "../Services/transaction";
+import { toast } from "sonner";
+import { getErrorMessage } from "../hooks/getError";
 
 export default function Transactions() {
     const [open, setOpen] = useState(false);
     const [openDispute, setOpenDispute] = useState(false);
     const [selectedItem, setSelectedItem] = useState<ITransaction | null>(null)
-    const {data} = useGetTransactionsQuery();
+    const {data, isError, error, isLoading} = useGetTransactionsQuery();
+    const {data:transactionBreakdown, error:transctionBreakdownError, isError:isTransactionBreakdownError, 
+        isLoading:isTransactionBreakdownloading} = useGetTransactionsBreakdownQuery()
+        console.log(transactionBreakdown);
+
+    useEffect(() => {
+            if ( isError || isTransactionBreakdownError && error || transctionBreakdownError) {
+                const errorMessage = getErrorMessage(error);
+                toast.error("Error Occured!", {
+                    description: errorMessage,
+                });
+            }
+    }, [ isError, isTransactionBreakdownError, error, transctionBreakdownError]);
 
 
     const showDrawer = () => {
@@ -177,7 +191,7 @@ export default function Transactions() {
             {
                 key: '1',
                 label: 'All Transactions',
-                children: <TabContent data={data?.data} columns={columns}  onRowClick={(row) => {
+                children: <TabContent isLoading={isLoading} data={data?.data} columns={columns}  onRowClick={(row) => {
                     setSelectedItem(row);
                     setOpen(true);
                   }}  />,
@@ -185,7 +199,7 @@ export default function Transactions() {
             {
                 key: '2',
                 label: 'Processing',
-                children: <TabContent data={data?.data} columns={columns} status="pending" onRowClick={(row) => {
+                children: <TabContent isLoading={isLoading} data={data?.data} columns={columns} status="pending" onRowClick={(row) => {
                     setSelectedItem(row);
                     setOpen(true); 
                  }} />,
@@ -193,7 +207,7 @@ export default function Transactions() {
             {
                 key: '3',
                 label: 'Failed',
-                children: <TabContent data={data?.data} columns={columns} status="cancelled" onRowClick={(row) => {
+                children: <TabContent isLoading={isLoading} data={data?.data} columns={columns} status="cancelled" onRowClick={(row) => {
                     setSelectedItem(row);
                     setOpen(true); 
                  }} />,
@@ -201,7 +215,7 @@ export default function Transactions() {
             {
                 key: '4',
                 label: 'Successful',
-                children: <TabContent data={data?.data} columns={columns}  status="completed" onRowClick={(row) => {
+                children: <TabContent isLoading={isLoading} data={data?.data} columns={columns}  status="completed" onRowClick={(row) => {
                     setSelectedItem(row);
                     setOpen(true); 
                  }} />,
@@ -215,21 +229,24 @@ export default function Transactions() {
                     <Cards 
                         backgroundGradient="bg-custom-radial-orange"
                         content={TransactionscardContent[0]}
-                        showCards={false}
-                        data={''}
+                        showCards={true}
+                        data={transactionBreakdown?.data?.pendingTransactions}
+                        isLoading={isTransactionBreakdownloading}
                     />
                     <Cards 
                         backgroundGradient="bg-custom-radial-green"
                         content={TransactionscardContent[1]}
-                        showCards={false}
-                        data={''}
+                        showCards={true}
+                        data={transactionBreakdown?.data?.successfulTransactions}
+                        isLoading={isTransactionBreakdownloading}
                     />
-                    <Cards 
+                    {/* <Cards 
                         backgroundGradient="bg-custom-radial-yellow"
                         content={TransactionscardContent[2]}
                         showCards={false}
                         data={''}
-                    />
+                        isLoading={isLoading}
+                    /> */}
                     {/* <Cards 
                         backgroundGradient="bg-custom-radial-blue"
                         content={TransactionscardContent[3]}

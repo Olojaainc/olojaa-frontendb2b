@@ -26,9 +26,10 @@ interface ITabContent<T extends object> {
 		created_at: number;
 	};
 	onRowClick?: (row: T) => void;
+	isLoading?: boolean;
 }
 
-export default function TabContent<T extends object>({status, columns, data, getSortValues, onRowClick}: ITabContent<T>) {
+export default function TabContent<T extends object>({status, columns, data, getSortValues, isLoading, onRowClick}: ITabContent<T>) {
 	const [sortOption, setSortOption] = useState("low-to-high");
 
 	const dataArray = Array.isArray(data) ? data : [];
@@ -98,7 +99,7 @@ export default function TabContent<T extends object>({status, columns, data, get
 					</DropdownMenu>
 				</Flex>
 			</Flex>
-			<DataTable columns={columns} data={sortedItems as T[]} onRowClick={onRowClick} />
+			<DataTable isLoading={isLoading} skeletonRows={5} columns={columns} data={sortedItems as T[]} onRowClick={onRowClick} />
 		</Flex>
 	)
 }
