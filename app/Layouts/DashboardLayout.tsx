@@ -7,7 +7,6 @@ import House from '@/public/House.svg';
 import ListBullets from '@/public/ListBullets.svg';
 import Truck from '@/public/Truck.svg'
 import CurrencyNgn from '@/public/CurrencyNgn.svg';
-import Headset from '@/public/Headset.svg';
 import GearSix from '@/public/GearSix.svg';
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -25,7 +25,7 @@ export default function Transactions() {
     const [open, setOpen] = useState(false);
     const [openDispute, setOpenDispute] = useState(false);
     const [selectedItem, setSelectedItem] = useState<ITransaction | null>(null)
-    const {data, isError, error, isLoading} = useGetTransactionsQuery();
+    const {data, isError, error, isLoading} = useGetTransactionsQuery({});
     const {data:transactionBreakdown, error:transctionBreakdownError, isError:isTransactionBreakdownError, 
         isLoading:isTransactionBreakdownloading} = useGetTransactionsBreakdownQuery()
         console.log(transactionBreakdown);
@@ -225,7 +225,7 @@ export default function Transactions() {
         <DashboardLayout>
             <div className=" flex flex-col w-full gap-6 bg-white h-full p-8 rounded-[20px]">
 				<DashboardNavigation title="Transactions"  isVisible={false}/>
-                <div className="grid grid-cols-4 gap-4 mt-4">
+                <div className="grid grid-cols-2 gap-4 mt-4">
                     <Cards 
                         backgroundGradient="bg-custom-radial-orange"
                         content={TransactionscardContent[0]}
