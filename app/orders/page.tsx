@@ -37,8 +37,6 @@ export default function Orders() {
 	const { data, isLoading } = useGetOrdersQuery();
 	const {data:orderManagement} = useGetOrderManagementQuery();
 
-	console.log(orderManagement);
-	console.log('loading', isLoading)
     
     const showDrawer = () => {
         setOpen(true);

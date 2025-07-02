@@ -11,7 +11,9 @@ import Headset from '@/public/Headset.svg';
 import GearSix from '@/public/GearSix.svg';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { logout } from "../Auth/actions";
+import { logout } from "@/app/Auth/actions";
+import NotificationPopup from "../components/NotificationPopup";
+import { LogOut } from "lucide-react";
 
 interface IDashboardLayout{
     children: React.ReactNode;
@@ -33,10 +35,12 @@ export default function DashboardLayout({children}:IDashboardLayout) {
             <aside className="flex flex-col w-[216px]  p-4 ">
                 <div className="flex items-center justify-between mb-6">
                     <Image src={logo} width={75} height={24} alt="logo" />
-                    <div className="flex items-center">
-                        <div className="w-9 h-8 mr-2 bg-[#E5E7EB] p-1 text-center rounded-lg">
-                            <Image src={Bell} width={36} height={32} alt="logo" />
-                        </div>
+                    <div className="flex gap-3 items-center">
+                        <NotificationPopup>
+                            <div className="w-7 h-7 mr-2 bg-[#E5E7EB] p-1 text-center rounded-lg hover:bg-[#D1D5DB] transition-colors">
+                                <Image src={Bell} width={30} height={32} alt="Notifications" />
+                            </div>
+                        </NotificationPopup>
                         <Image src={Avatar} width={32} height={32} alt="logo" />
                     </div>
                    
@@ -63,16 +67,16 @@ export default function DashboardLayout({children}:IDashboardLayout) {
 
                 <div className="pt-6 border-t border-[#D1D5DB]">
                     <div className="flex mb-4">
-                        <Image className="mr-2 w-auto h-auto" src={Headset} width={16} height={16} alt="Headset Icon" />
+                        <LogOut width={16} height={16} className="mr-2 w-auto h-auto text-[#6B7280]" />
                         <button onClick={logout} className="text-sm font-medium text-[var(--primary-400)]">Logout</button>
                     </div>
                     <button className="flex">
-                        <Image className="mr-2 w-auto h-auto" src={GearSix} width={16} height={16} alt="Gear Icon" />
+                        <Image className="mr-2 w-auto h-auto " src={GearSix} width={16} height={16} alt="Gear Icon" />
                         <p className="text-sm text-[var(--gray-400)]">Settings</p>
                     </button>
                 </div>
             </aside>
-            <main className=" w-auto pt-6 px-6 h-[100vh] overflow-auto">
+            <main className=" w-full pt-6 px-6 h-[100vh] overflow-auto">
                 {children}
             </main>
         </div>

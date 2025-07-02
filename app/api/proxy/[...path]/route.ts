@@ -14,7 +14,8 @@ async function proxyRequest(req: NextRequest, context: { params: Promise<{ path:
   // Await params before accessing its properties
   const params = await context.params;
   const herokuPath = params.path.join('/');
-  const targetUrl = `${HEROKU_BASE_URL}/${herokuPath}`;
+  const queryString = req.nextUrl.searchParams.toString();
+  const targetUrl = `${HEROKU_BASE_URL}/${herokuPath}${queryString ? `?${queryString}` : ''}`;
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
