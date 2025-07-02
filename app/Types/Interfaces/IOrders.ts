@@ -56,6 +56,9 @@ export interface PaginationLink {
 	per_page: number;
 	to: number;
 	total: number;
+	total_transactions?: number;
+	percentage_change?: number;
+	filter_applied: string;
   }
   
   export interface PaginationLinks {
