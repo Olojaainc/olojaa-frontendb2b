@@ -15,7 +15,7 @@ export async function signup(state: FormState, formData: IUserRegistration) {
 
 	const { name, email, password, address, phone_number } = validatedFields.data;
 
-	const res = await fetch('http://olojaa-testing-489e280a2994.herokuapp.com/api/v1/auth/register', {
+	const res = await fetch(`${process.env.HEROKU_BASE_URL}/auth/register`, {
 	method: 'POST',
 	headers: { 
 		'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export async function login(state: FormState, formData: ILoginDetails) {
 	
 		const { email, password } = validatedFields.data;
 	
-		const res = await fetch('http://olojaa-testing-489e280a2994.herokuapp.com/api/v1/auth/login', {
+		const res = await fetch(`${process.env.HEROKU_BASE_URL}/auth/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
 			body: JSON.stringify({ email, password }),
@@ -89,7 +89,7 @@ export async function changePassword(state: FormState, formData: IChangePassword
 
 	const { email, password, token } = validatedFields.data;
 
-	const res = await fetch('http://olojaa-testing-489e280a2994.herokuapp.com/api/v1/change-password', {
+	const res = await fetch(`${process.env.HEROKU_BASE_URL}/change-password`, {
 		method: 'POST',
 		headers: { 
 			'Content-Type': 'application/json',

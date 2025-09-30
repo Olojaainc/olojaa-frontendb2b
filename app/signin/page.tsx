@@ -99,7 +99,7 @@ export default function Signin() {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--gray-400)] hover:text-[var(--gray-600)]"
                       >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                       </button>
                     )}
                   </div>

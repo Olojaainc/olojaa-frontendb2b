@@ -27,9 +27,14 @@ interface ITabContent<T extends object> {
 	};
 	onRowClick?: (row: T) => void;
 	isLoading?: boolean;
+	onApplyFilters?: (filters: {
+		deliveryStartDate?: string;
+		deliveryEndDate?: string;
+		orderStatus?: string;
+	}) => void;
 }
 
-export default function TabContent<T extends object>({status, columns, data, getSortValues, isLoading, onRowClick}: ITabContent<T>) {
+export default function TabContent<T extends object>({status, columns, data, getSortValues, isLoading, onRowClick, onApplyFilters}: ITabContent<T>) {
 	const [sortOption, setSortOption] = useState("low-to-high");
 
 	const dataArray = Array.isArray(data) ? data : [];
@@ -76,7 +81,7 @@ export default function TabContent<T extends object>({status, columns, data, get
 			<Flex gap={'8px'}>
 				<Input placeholder="Search" prefix={<SearchOutlined />} className="w-[296px] rounded-xl border-[0.96px] placeholder:text-[#475467] " />
 				<Flex gap={'8px'}>
-					<Filter />
+					<Filter onApplyFilters={onApplyFilters} />
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button className="flex bg-transparent text-black hover:bg-[var(--gray-75)] border shadow-none rounded-xl py-2 px-[14px] w-[90px] h-9 text-sm font-semibold ">

@@ -18,7 +18,7 @@ export default function ForgotPassword() {
   };
 
   const redirectUrl =
-    process.env.NEXT_PUBLIC_REDIRECT_URL ||
+    process.env.HEROKU_BASE_URL ||
     "http://localhost:3000/changepassword";
 
   const resetPassword = async (formValues: string) => {
@@ -26,7 +26,7 @@ export default function ForgotPassword() {
     setApiResponse(null);
     try {
       const res = await fetch(
-        "http://olojaa-testing-489e280a2994.herokuapp.com/api/v1/reset-password",
+        `${process.env.NEXT_PUBLIC_HEROKU_BASE_URL}/reset-password`,
         {
           method: "POST",
           headers: {

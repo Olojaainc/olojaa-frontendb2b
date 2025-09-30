@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-const HEROKU_BASE_URL = 'http://olojaa-testing-489e280a2994.herokuapp.com/api/v1';
+const HEROKU_BASE_URL = process.env.HEROKU_BASE_URL;
 
 async function proxyRequest(req: NextRequest, context: { params: Promise<{ path: string[] }> }, method: string) {
     const cookieStore = cookies();

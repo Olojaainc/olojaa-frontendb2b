@@ -34,8 +34,27 @@ export default function Orders() {
 	const [open, setOpen] = useState(false);
 	const [isCreateOrder, setCreateOrder] = useState(false);
 	const [selectedItem, setSelectedItem] = useState<Order | null>(null)
-	const { data, isLoading } = useGetOrdersQuery();
+	const [filters, setFilters] = useState<{
+		order_status?: string;
+		delivery_start_date?: string;
+		delivery_end_date?: string;
+	}>({});
+	
+	const { data, isLoading } = useGetOrdersQuery(Object.keys(filters).length > 0 ? filters : undefined);
 	const {data:orderManagement} = useGetOrderManagementQuery();
+
+	const handleApplyFilters = (newFilters: {
+		deliveryStartDate?: string;
+		deliveryEndDate?: string;
+		orderStatus?: string;
+	}) => {
+		const apiFilters = {
+			...(newFilters.orderStatus && { order_status: newFilters.orderStatus }),
+			...(newFilters.deliveryStartDate && { delivery_start_date: newFilters.deliveryStartDate }),
+			...(newFilters.deliveryEndDate && { delivery_end_date: newFilters.deliveryEndDate }),
+		};
+		setFilters(apiFilters);
+	};
 
     
     const showDrawer = () => {
@@ -185,6 +204,7 @@ export default function Orders() {
 				quantity: item.quantity ?? 0,
 				created_at: new Date(item.created_at ?? '').getTime() || 0,
 			  })}
+			  onApplyFilters={handleApplyFilters}
 			 />,
 		},
 		{
@@ -199,6 +219,7 @@ export default function Orders() {
 				quantity: item.quantity ?? 0,
 				created_at: new Date(item.created_at ?? '').getTime() || 0,
 			  })}
+			  onApplyFilters={handleApplyFilters}
 			 />,
 		},
 		{
@@ -213,7 +234,7 @@ export default function Orders() {
 				quantity: item.quantity ?? 0,
 				created_at: new Date(item.created_at ?? '').getTime() || 0,
 			  })}
-			 
+			  onApplyFilters={handleApplyFilters}
 			 />,
 		},
 		{
@@ -223,12 +244,12 @@ export default function Orders() {
                 setSelectedItem(row);
                 setOpen(true); 
              }} 
-			 
 			 getSortValues={(item) => ({
 				total_amount: parseFloat(item.total_amount ?? '0'),
 				quantity: item.quantity ?? 0,
 				created_at: new Date(item.created_at ?? '').getTime() || 0,
 			  })}
+			  onApplyFilters={handleApplyFilters}
 			 />,
 		},
 		{
@@ -243,7 +264,7 @@ export default function Orders() {
 				quantity: item.quantity ?? 0,
 				created_at: new Date(item.created_at ?? '').getTime() || 0,
 			  })}
-			 
+			  onApplyFilters={handleApplyFilters}
 			 />
 		},
 	];
