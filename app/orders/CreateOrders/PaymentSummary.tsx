@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
-import { ApiErrorResponse, IOrderDetails } from "@/app/Types/Interfaces/IOrders";
+import { IOrderDetails } from "@/app/Types/Interfaces/IOrders";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -38,36 +38,6 @@ export default function PaymentSummary({onClose, isLoading, onPrev, formik}:IPay
         }
     },[error])
   
-    // const getOrderBreakDown = async () => {
-      
-    //     try {
-    //       const res = await fetch('/api/order-breakdown', {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({
-    //           gas_type_id: values.gas_type_id,
-    //           quantity: values.quantity,
-    //         }),
-    //       });
-      
-    //       const data = await res.json();
-      
-    //       if (!res.ok) {
-    //         setError(data);
-    //         return;
-    //       }
-      
-    //       setOrderBreakdown(data);
-    //     } catch (error: unknown) {
-    //         console.log('payment summary',error);
-    //       setError({
-    //         message: 'Network error. Please try again later.',
-    //       });
-    //     }
-    // };
-
     useEffect(() => {
         if (values.gas_type_id && values.quantity) {
             getOrderBreakdown({ gas_type_id: values.gas_type_id, quantity: values.quantity });

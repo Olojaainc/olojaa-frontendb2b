@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Delivery from "./Delivery";
 import OrderDetails from "./OrderDetails";
-import { ApiErrorResponse, IOrderDetails } from "@/app/Types/Interfaces/IOrders";
+import { IOrderDetails } from "@/app/Types/Interfaces/IOrders";
 import { useFormik } from "formik";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import PaymentSummary from "./PaymentSummary";
@@ -16,40 +16,6 @@ interface ICreateOrder{
 export default function CreateOrder({isCreateOrder, onCloseOrder}:ICreateOrder) {
   const [step, setStep] = useState(1);
   const [createOrder, { isLoading, error, data }] = useCreateOrderMutation();
-  // const [errors, setError] = useState<ApiErrorResponse>();
-  // const [isLoading, setLoading] = useState(false);
-  
-  // const createOrder = async (values:IOrderDetails) => {
-  //   try {
-  //     setLoading(true);
-  //     const res = await fetch('/api/create-order', {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(values),
-  //     });
-  
-  //     const data = await res.json();
-  
-  //     if (res.ok && data?.data?.authorization_url) {
-  //       console.log('Redirecting to:', data);
-  //       window.location.href = data.data.authorization_url;
-  //       return;
-  //     }
-  
-  //     if (!res.ok) {
-  //       setError(data);
-  //     }
-  //   } catch (error: unknown) {
-  //     console.log('create orders error',error);
-  //     setError({
-  //       message: 'Network error. Please try again later.',
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
 
   const formik = useFormik({
