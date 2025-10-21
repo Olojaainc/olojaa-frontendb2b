@@ -53,7 +53,7 @@ export default {
   		},
   		backgroundImage: {
   			'custom-url': 'url("/Background.png")',
-  			'custom-radial': 'radial-gradient( #F4F5FE 0%, #FFEDE1 51%, #F4F6F7 100%), url("/Background.png")',
+  			'custom-radial': 'radial-gradient(rgba(244, 245, 254, 0.8) 0%, rgba(255, 237, 225, 0.8) 51%, rgba(244, 246, 247, 0.8) 100%), url("/Background.png")',
   			'custom-radial-orange': 'radial-gradient(99.91% 775.24% at 0% 54.88%, #FFFFFF 20.24%, rgba(255, 225, 204, 0.3) 57.08%, #FFFFFF 100%)',
   			'custom-radial-green': 'radial-gradient(99.91% 775.24% at 0% 54.88%, #FFFFFF 20.24%, rgba(209, 250, 223, 0.3) 57.08%, #FFFFFF 100%)',
   			'custom-radial-yellow': 'radial-gradient(99.91% 775.24% at 0% 54.88%, #FFFFFF 20.24%, rgba(251, 226, 183, 0.3) 57.08%, #FFFFFF 100%)',

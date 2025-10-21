@@ -1,27 +1,15 @@
- import { cookies } from 'next/headers';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
+import { apiPostCall } from '../utility';
 
 export async function POST(request: Request) {
-  const cookieStore = cookies();
-  const token = (await cookieStore).get('authToken')?.value;
-
-  if (!token) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
   const body = await request.json();
 
-  const response = await fetch('https://olojaa-backendb2b.onrender.com/api/v1/business/order-breakdown', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
+  try {
+    const { data, status } = await apiPostCall(`${process.env.HEROKU_BASE_URL}/business/order-breakdown`, body);
+    return NextResponse.json(data, { status });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 401 });
+  }
 
-  const data = await response.json();
-
-  return NextResponse.json(data, { status: response.status });
 }

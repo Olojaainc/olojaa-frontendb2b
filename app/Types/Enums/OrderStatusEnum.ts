@@ -6,7 +6,7 @@ export enum OrderStatus{
 }
 
 export enum GasTypes{
-    LNG = 1,
+    LPG = 1,
     CNG = 2
 }
 

@@ -3,11 +3,11 @@ import Link from "next/link";
 import AuthLayout from "@/app/Layouts/AuthLayout";
 import { useState } from "react";
 import { Alert } from "antd";
-import { IErrorResponse } from "../Types/Interfaces/IUser";
+import { IResponse } from "../Types/Interfaces/IUser";
 
 export default function ForgotPassword() {
   const [formValues, setFormValues] = useState({ email: "" });
-  const [apiResponse, setApiResponse] = useState<IErrorResponse | null>(null);
+  const [apiResponse, setApiResponse] = useState<IResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,15 +18,15 @@ export default function ForgotPassword() {
   };
 
   const redirectUrl =
-    process.env.NEXT_PUBLIC_REDIRECT_URL ||
-    "http://localhost:3000/ChangePassword";
+    process.env.HEROKU_BASE_URL ||
+    "http://localhost:3000/changepassword";
 
   const resetPassword = async (formValues: string) => {
     setLoading(true);
     setApiResponse(null);
     try {
       const res = await fetch(
-        "https://olojaa-backendb2b.onrender.com/api/v1/reset-password",
+        `${process.env.NEXT_PUBLIC_HEROKU_BASE_URL}/reset-password`,
         {
           method: "POST",
           headers: {
@@ -40,7 +40,7 @@ export default function ForgotPassword() {
         }
       );
 
-      const data: IErrorResponse = await res.json();
+      const data: IResponse = await res.json();
 
       if (!res.ok) {
         setApiResponse(data);

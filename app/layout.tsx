@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./Services/Providers";
+import { Toaster } from "sonner";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -22,7 +24,27 @@ export default function RootLayout({
       <body
         className={`${figtree.variable} antialiased`}
       >
-        {children}
+        <Providers>{children}</Providers>
+        <Toaster
+          position="top-right"
+          richColors={false}
+          closeButton
+          expand={false}
+          visibleToasts={3}
+          toastOptions={{
+            unstyled: false,
+            className: 'custom-toast',
+            duration: 5000,
+            classNames: {
+              error: 'toast-error',
+              success: 'toast-success',
+              warning: 'toast-warning',
+              info: 'toast-info',
+              loading: 'toast-loading',
+            },
+          }}
+          theme="light"
+        />
       </body>
     </html>
   );

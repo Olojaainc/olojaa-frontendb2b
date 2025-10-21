@@ -1,5 +1,5 @@
-export interface ICardContent{
+export interface ICardContent<T = number> {
     cardTitle: string;
-    Value: number;
     icon: string
+    Value: T
 }

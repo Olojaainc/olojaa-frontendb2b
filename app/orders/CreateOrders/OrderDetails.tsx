@@ -1,3 +1,4 @@
+'use client';
 import { GasTypes } from "@/app/Types/Enums/OrderStatusEnum";
 import { IOrderDetails } from "@/app/Types/Interfaces/IOrders";
 import { Button } from "@/components/ui/button"
@@ -84,7 +85,7 @@ export default function OrderDetails({onClose, onNext, formik}:ICreateOrder) {
                     </div>
                    <div className="flex flex-col gap-1">
                         <p className="text-sm font-medium text-[var(--gray-900)] ">Enter how many quantity of gas you want to buy</p>
-                        <Input name="quantity" type="text" onChange={handleChange} value={values.quantity} placeholder="20kg" className="border w-full h-11 rounded-xl placeholder:text-xs  "/>
+                        <Input name="quantity" type="number" onChange={handleChange} value={values.quantity} placeholder="20kg" className="border w-full h-11 rounded-xl placeholder:text-xs  "/>
                         <p className="text-sm font-medium text-[var(--primary-400)] ">Gas sells at ₦100 per KG</p>
                    </div>
                    <div className="flex flex-col gap-1">
@@ -95,7 +96,7 @@ export default function OrderDetails({onClose, onNext, formik}:ICreateOrder) {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectItem value={GasTypes.LNG.toString()}>LNG (Cooking Gas)</SelectItem>
+                                    <SelectItem value={GasTypes.LPG.toString()}>LPG (Cooking Gas)</SelectItem>
                                     <SelectItem value={GasTypes.CNG.toString()}>CNG</SelectItem>
                                 </SelectGroup>
                             </SelectContent>

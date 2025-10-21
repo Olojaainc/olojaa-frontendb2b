@@ -1,38 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { decrypt } from '@/app/Auth/_lib/session'
- 
-// 1. Specify protected and public routes
-const protectedRoutes = ['/dashboard', '/orders']
+import jwt from 'jsonwebtoken';
+
+const protectedRoutes = ['/dashboard', '/orders', '/deliveries', '/transactions']
 const publicRoutes = ['/signin', '/signup', '/']
- 
+
+
 export default async function middleware(req: NextRequest) {
-  // 2. Check if the current route is protected or public
-  const path = req.nextUrl.pathname.toLowerCase()
+  const path = req.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)
   const isPublicRoute = publicRoutes.includes(path)
- 
-  // 3. Decrypt the session from the cookie
-  const cookie = req.cookies.get('session')?.value
-  const session = await decrypt(cookie)
- 
-  // 4. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session?.exp) {
-    return NextResponse.redirect(new URL('/signin', req.nextUrl))
+
+  const cookie = req.cookies.get("session")?.value
+  let session: any = null;
+  if (cookie) {
+    session = jwt.decode(cookie);
   }
- 
-  // 5. Redirect to /dashboard if the user is authenticated
-  if (
-    isPublicRoute &&
-    session?.exp &&
-    !req.nextUrl.pathname.startsWith('/dashboard')
-  ) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+
+  if (isProtectedRoute && !session?.userId) {
+    const redirectResponse = NextResponse.redirect(new URL('/signin', req.nextUrl));
+    redirectResponse.headers.set("x-middleware-cache", "no-cache");
+    return redirectResponse;
   }
- 
+
+  if (isPublicRoute && session?.userId ) {
+    const redirectResponse = NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+    redirectResponse.headers.set("x-middleware-cache", "no-cache");
+    return redirectResponse;
+  }
+
   return NextResponse.next()
 }
- 
-// Routes Middleware should not run on
+
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
 }

@@ -1,13 +1,7 @@
  /* eslint-disable */
-import React, { JSX, PureComponent } from 'react';
+import React, { JSX } from 'react';
 import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
-
-const data = [
-  { name: 'Total Orders', value: 10 },
-  { name: 'Group B', value: 10 },
-  { name: 'Group C', value: 10 },
-  { name: 'Group D', value: 10 },
-];
+import { IOrderManagement } from '@/app/Types/Interfaces/IOrders';
 
 interface ActiveShapeProps {
   cx: number;
@@ -69,37 +63,48 @@ const renderActiveShape = (props: ActiveShapeProps) => {
   );
 };
 
-export default class OrderChart extends PureComponent {
-//   static demoUrl = 'https://codesandbox.io/s/pie-chart-with-customized-active-shape-y93si';
+interface OrderChartProps {
+  orderData?: IOrderManagement;
+}
 
-  state = {
-    activeIndex: 0,
+export default function OrderChart({ orderData }: OrderChartProps) {
+  const [activeIndex, setActiveIndex] = React.useState(0);
+
+  const onPieEnter = (_: any, index: any) => {
+    setActiveIndex(index);
   };
 
-  onPieEnter = (_: any, index: any) => {
-    this.setState({
-      activeIndex: index,
-    });
-  };
+  // Transform API data into chart format
+  const data = React.useMemo(() => {
+    if (!orderData) {
+      return [
+        { name: 'No Data', value: 1, fill: '#E5E7EB' }
+      ];
+    }
 
-  render() {
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={400} height={400}>
-            <Pie
-                activeIndex={this.state.activeIndex}
-                activeShape={renderActiveShape as unknown as (props: any) => JSX.Element}
-                data={data}
-                cx="50%"
-                cy="50%"
-                innerRadius={80}
-                outerRadius={100}
-                fill="#C4B5FD"
-                dataKey="value"
-                onMouseEnter={this.onPieEnter}
-            />
-        </PieChart>
-      </ResponsiveContainer>
-    );
-  }
+    return [
+      { name: 'Completed', value: orderData.completedOrders || 0, fill: '#C4B5FD' },
+      { name: 'Pending', value: orderData.pendingOrders || 0, fill: '#F5B547' },
+      { name: 'Rejected', value: orderData.rejectedOrders || 0, fill: '#9CA3AF' },
+      { name: 'Recurring', value: orderData.recurringOrders || 0, fill: '#60A5FA' },
+    ].filter(item => item.value > 0); // Only show segments with data
+  }, [orderData]);
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart width={400} height={400}>
+          <Pie
+              activeIndex={activeIndex}
+              activeShape={renderActiveShape as unknown as (props: any) => JSX.Element}
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={80}
+              outerRadius={100}
+              dataKey="value"
+              onMouseEnter={onPieEnter}
+          />
+      </PieChart>
+    </ResponsiveContainer>
+  );
 }

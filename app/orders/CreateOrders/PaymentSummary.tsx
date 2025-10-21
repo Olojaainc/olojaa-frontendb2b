@@ -1,75 +1,59 @@
-import { ApiResonse, IOrderBreakdown, IOrderDetails, IOrderError } from "@/app/Types/Interfaces/IOrders";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+/* eslint-disable react-hooks/exhaustive-deps */
+'use client';
+import { IOrderDetails } from "@/app/Types/Interfaces/IOrders";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useFormik } from "formik";
 import AlertIcon from '@/public/AlertIcon.svg'
-import { useEffect, useState } from "react";
-import { AlertCircle } from "lucide-react";
+import { useEffect } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/app/hooks/getError";
+import { useGetOrderBreakdownMutation } from "@/app/Services/orders";
+import { Skeleton } from "@/components/ui/skeleton";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 interface IPaymentSummaryProps{
     formik: ReturnType<typeof useFormik<IOrderDetails>>;
     onPrev: () => void;
     onClose: () => void;
+    orderErrors: FetchBaseQueryError | SerializedError | undefined;
+    isLoading: boolean;
 }
 
 
-export default function PaymentSummary({onClose, onPrev, formik}:IPaymentSummaryProps) {
+export default function PaymentSummary({onClose, isLoading, onPrev, formik}:IPaymentSummaryProps) {
     const {values, handleSubmit, setFieldValue} = formik
-    const [orderBreakdown, setOrderBreakdown] = useState<ApiResonse<IOrderBreakdown>>();
-    const [errors, setError] = useState<IOrderError>(); 
-  
-    const getOrderBreakDown = async () => {
-      try {
-            const res = await fetch('/api/order-breakdown', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    gas_type_id: values.gas_type_id,
-                    quantity: values.quantity,
-                }),
-            });
-    
-            const data = await res.json();
-    
-            if (!res.ok) {
-                throw new Error(data.message || 'Something went wrong');
-            }
-    
-            setOrderBreakdown(data);
-        } catch (error: unknown) {
-            console.error('errors',error);
-            setError(error as IOrderError);
-        }
-    };
-  
-    useEffect(() => {
-      getOrderBreakDown();
-    }, []);
+    const [getOrderBreakdown, { data, error, isLoading: isBreakdownLoading }] = useGetOrderBreakdownMutation(); 
 
     useEffect(() => {
-        if (orderBreakdown?.data) {
-            setFieldValue('amount', orderBreakdown?.data.total_price);
+        if(error){
+            const errorMessage = getErrorMessage(error);
+            toast.error("Error Occured!", {
+                description: errorMessage,
+            });
         }
-    },[orderBreakdown?.data]);
+    },[error])
+  
+    useEffect(() => {
+        if (values.gas_type_id && values.quantity) {
+            getOrderBreakdown({ gas_type_id: values.gas_type_id, quantity: values.quantity });
+        }
+    }, [values.gas_type_id, values.quantity, getOrderBreakdown]);
+
+    useEffect(() => {
+        if (data?.data) {
+            setFieldValue('amount', data.data.total_price);
+        }
+    },[data]);
 
 
 
     return(
         <div className="p-6">
-            { ((errors?.gas_type_id?.length ?? 0) > 0 || (errors?.quantity?.length ?? 0) > 0) && <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>
-                    {errors?.gas_type_id && errors?.gas_type_id[0]}
-                    {errors?.quantity && errors?.quantity[0]}
-                </AlertDescription>
-            </Alert>}
             <DialogHeader>
                 <DialogTitle>Make an order</DialogTitle>
                 <div className="pt-6 ">
@@ -123,36 +107,48 @@ export default function PaymentSummary({onClose, onPrev, formik}:IPaymentSummary
                     <p className="text-xs font-medium text-[var(--gray-600)] ">Review your order and make payment</p>
                 </div>
                 <p className="text-xl font-semibold mt-4">Order Summary</p>
+                {isBreakdownLoading ? (
+                    <div className="w-full content-between grid grid-cols-2 gap-y-4 gap-x-16">
+                        <div className="text-sm font-semibold text-[var(--gray-900)]">Quantity</div>
+                        <div className="flex justify-end"><Skeleton className="h-4 w-16" /></div>
+                        <div className="text-sm font-semibold text-[var(--gray-900)]">Gas Type</div>
+                        <div className="flex justify-end"><Skeleton className="h-4 w-20" /></div>
+                        <div className="text-sm font-semibold text-[var(--gray-900)]">Provider</div>
+                        <div className="flex justify-end"><Skeleton className="h-4 w-24" /></div>
+                        <div className="text-sm font-semibold text-[var(--gray-900)]">Price per KG</div>
+                        <div className="flex justify-end"><Skeleton className="h-4 w-16" /></div>
+                    </div>
+                ) : (
                 <div className="w-full content-between grid grid-cols-2 gap-y-4 gap-x-16">
                     <div className=" text-sm font-semibold text-[var(--gray-900)]">Quantity</div>
-                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{orderBreakdown?.data.quantity}KG</div>
+                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{data?.data?.quantity}KG</div>
                     <div className=" text-sm font-semibold text-[var(--gray-900)]">Gas Type</div>
-                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{orderBreakdown?.data.gas_type}</div>
+                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{data?.data?.gas_type}</div>
                     <div className=" text-sm font-semibold text-[var(--gray-900)]">Provider</div>
                     <div className="flex justify-end text-smfont-medium text-[var(--gray-600)]">{values.gas_provider}</div>
                     <div className=" text-sm font-semibold text-[var(--gray-900)]">Price per KG</div>
-                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)] ">₦{orderBreakdown?.data.price_per_kg.toFixed(2)}</div>
+                    <div className="flex justify-end text-smfont-medium text-[var(--gray-600)] ">₦{data?.data?.price_per_kg?.toFixed(2)}</div>
                     
                     {values.recurring === 0 && <>
                         <div></div>
                         <div className="flex w-[250px] justify-between ">
                             <p className="text-xl font-semibold text-[var(--gray-400)]">Sub Total</p>
-                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{((orderBreakdown?.data?.total_price ?? 0) - (orderBreakdown?.data?.delivery_fee ?? 0) - (orderBreakdown?.data?.service_charge ?? 0)).toFixed(2)}</p>
+                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{((data?.data?.total_price ?? 0) - (data?.data?.delivery_fee ?? 0) - (data?.data?.service_charge ?? 0)).toFixed(2)}</p>
                         </div>
                         <div></div>
                         <div className="flex w-[250px] justify-between ">
                             <p className="text-xl font-semibold text-[var(--gray-400)]">Delivery Fee</p>
-                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{orderBreakdown?.data.delivery_fee.toFixed(2)}</p>
+                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{data?.data?.delivery_fee?.toFixed(2)}</p>
                         </div>
                         <div></div>
                         <div className="flex space-x-2 w-auto justify-end ">
                             <p className="text-xl font-semibold text-[var(--gray-400)]">VAT</p>
-                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{orderBreakdown?.data.service_charge.toFixed(2)}</p>
+                            <p className="text-xl font-semibold text-[var(--gray-400)]">₦{data?.data?.service_charge?.toFixed(2)}</p>
                         </div>
                         <div></div>
                         <div className="flex w-[250px] justify-between ">
                             <p className="text-2xl font-bold text-[var(--gray-600)]">Total</p>
-                            <p className="text-2xl font-bold text-[var(--gray-600)]">₦{orderBreakdown?.data.total_price.toFixed(2)}</p>
+                            <p className="text-2xl font-bold text-[var(--gray-600)]">₦{data?.data?.total_price?.toFixed(2)}</p>
                         </div>
                     </>}
                     { values.recurring === 1 && <div className="w-[550px] bg-[var(--blue-75)] flex flex-col gap-2 px-4 py-3 border border-blue-400 rounded-xl">
@@ -170,17 +166,18 @@ export default function PaymentSummary({onClose, onPrev, formik}:IPaymentSummary
                                 <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">After {values.end_after} occurencies</div>
                             }
                             <div className=" text-xs font-semibold text-[var(--gray-900)]">Individual Order Total</div>
-                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)] ">₦{((orderBreakdown?.data?.total_price ?? 0) - (orderBreakdown?.data?.delivery_fee ?? 0) - (orderBreakdown?.data?.service_charge ?? 0)).toFixed(2)}</div>
+                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)] ">₦{((data?.data?.total_price ?? 0) - (data?.data?.delivery_fee ?? 0) - (data?.data?.service_charge ?? 0)).toFixed(2)}</div>
                             <div className=" text-xs font-semibold text-[var(--gray-900)]">Delivery Fee per Order</div>
-                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(orderBreakdown?.data.delivery_fee ?? 0).toFixed(2) }</div>
+                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(data?.data?.delivery_fee ?? 0)?.toFixed(2) }</div>
                             <div className=" text-xs font-semibold text-[var(--gray-900)]">VAT per Order</div>
-                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(orderBreakdown?.data.service_charge ?? 0).toFixed(2)}</div>
+                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(data?.data?.service_charge ?? 0)?.toFixed(2)}</div>
                             <div className=" text-xs font-semibold text-[var(--gray-900)]">Grand Total</div>
-                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(orderBreakdown?.data.total_price ?? 0).toFixed(2)}</div>
+                            <div className="flex justify-end text-xs font-medium text-[var(--gray-600)]">₦{(data?.data?.total_price ?? 0)?.toFixed(2)}</div>
                         </div>
                     </div>
                     }
                 </div>
+                )}
                 {
                     values.recurring === 1 &&  <div>
                         <p className="text-xs font-mediumn text-[var(--gray-900)]">
@@ -197,12 +194,11 @@ export default function PaymentSummary({onClose, onPrev, formik}:IPaymentSummary
                         <RadioGroupItem value="paystack" id="r1" />
                         <Label className="text-sm font-normal text-[var(--gray-600)]" htmlFor="r1">Pay with Transfer</Label>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    {/* <div className="flex items-center space-x-2">
                         <RadioGroupItem value="credit_line" id="r2" />
                         <Label className="text-sm font-normal text-[var(--gray-600)]" htmlFor="r2">Pay with Credit Line</Label>
-                    </div>
+                    </div> */}
                 </RadioGroup>
-
             </div>
             <hr className="my-4" style={{ border: '1px thin #D1D5DB' }}/>
             <DialogFooter className="sm:justify-end mt-4">
@@ -216,8 +212,9 @@ export default function PaymentSummary({onClose, onPrev, formik}:IPaymentSummary
                     type="button" 
                     variant="outline"
                     onClick={() => handleSubmit()}
+                    disabled={isLoading}
                 >
-                    Place Order
+                    {isLoading ? 'Creating Order' : 'Create Order'}
                 </Button>
             </DialogFooter>
         </div>

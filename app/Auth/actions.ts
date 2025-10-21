@@ -1,6 +1,7 @@
 'use server'
 import { SignupSchema, FormState, loginSchema, changePasswordSchema } from '@/app/Auth/_lib/definitions';
 import { createSession, deleteSession, setBearerToken } from '@/app/Auth/_lib/session';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { IChangePassword, ILoginDetails, IUserRegistration } from '../Types/Interfaces/IUser';
 
@@ -15,7 +16,7 @@ export async function signup(state: FormState, formData: IUserRegistration) {
 
 	const { name, email, password, address, phone_number } = validatedFields.data;
 
-	const res = await fetch('https://olojaa-backendb2b.onrender.com/api/v1/auth/register', {
+	const res = await fetch(`${process.env.HEROKU_BASE_URL}/auth/register`, {
 	method: 'POST',
 	headers: { 
 		'Content-Type': 'application/json',
@@ -39,7 +40,11 @@ export async function signup(state: FormState, formData: IUserRegistration) {
 
 	const user = await res.json();
 
-	await createSession(user.slug);
+	if (user.data.token) {
+		await setBearerToken(user.data.token);
+	}
+
+	await createSession(user.data.slug);
 	redirect('/dashboard');
   
 }
@@ -53,7 +58,7 @@ export async function login(state: FormState, formData: ILoginDetails) {
 	
 		const { email, password } = validatedFields.data;
 	
-		const res = await fetch('https://olojaa-backendb2b.onrender.com/api/v1/auth/login', {
+		const res = await fetch(`${process.env.HEROKU_BASE_URL}/auth/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
 			body: JSON.stringify({ email, password }),
@@ -69,9 +74,8 @@ export async function login(state: FormState, formData: ILoginDetails) {
 			await setBearerToken(user.data.token);
 		}
 	
-		await createSession(user.slug);
+		await createSession(user.data.slug);
 	
-		// ✅ No need to catch redirect!
 		redirect('/dashboard');
   }
  
@@ -86,7 +90,7 @@ export async function changePassword(state: FormState, formData: IChangePassword
 
 	const { email, password, token } = validatedFields.data;
 
-	const res = await fetch('https://olojaa-backendb2b.onrender.com/api/v1/change-password', {
+	const res = await fetch(`${process.env.HEROKU_BASE_URL}/change-password`, {
 		method: 'POST',
 		headers: { 
 			'Content-Type': 'application/json',
@@ -105,6 +109,8 @@ export async function changePassword(state: FormState, formData: IChangePassword
   
 }
 export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete('authToken');
   deleteSession()
   redirect('/signin');
 }

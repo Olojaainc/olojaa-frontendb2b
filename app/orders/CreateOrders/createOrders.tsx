@@ -1,10 +1,12 @@
-import { useState } from "react";
+'use client';
+import { useEffect, useState } from "react";
 import Delivery from "./Delivery";
 import OrderDetails from "./OrderDetails";
 import { IOrderDetails } from "@/app/Types/Interfaces/IOrders";
 import { useFormik } from "formik";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import PaymentSummary from "./PaymentSummary";
+import { useCreateOrderMutation } from "@/app/Services/orders";
 
 interface ICreateOrder{
     isCreateOrder:boolean;
@@ -13,6 +15,8 @@ interface ICreateOrder{
 
 export default function CreateOrder({isCreateOrder, onCloseOrder}:ICreateOrder) {
   const [step, setStep] = useState(1);
+  const [createOrder, { isLoading, error, data }] = useCreateOrderMutation();
+
 
   const formik = useFormik({
     initialValues: {
@@ -29,12 +33,23 @@ export default function CreateOrder({isCreateOrder, onCloseOrder}:ICreateOrder) 
       end_date: '',
       end_after: 0,
       payment_method: '',
-      amount: 0
+      amount: 0,
+      callback_url: process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:3000/orders' 
+        : 'https://olojaa-frontendb2b-ashy.vercel.app/orders',
+      date_picked: 0
     } as IOrderDetails,
     onSubmit: (values) => {
-      console.log('Final submission', values);
+      createOrder(values);
     }
   });
+
+	useEffect(() => {
+		if (data?.data.authorization_url) {
+			window.location.href = data.data.authorization_url;
+		}
+	}, [data?.data.authorization_url]);
+
     return(
         <Dialog open={isCreateOrder} onOpenChange={onCloseOrder}>
             <DialogContent className="max-w-[600px] max-h-[700px] h-auto p-0 overflow-scroll hide-scrollbar ">
@@ -60,6 +75,8 @@ export default function CreateOrder({isCreateOrder, onCloseOrder}:ICreateOrder) 
                     formik={formik}
                     onPrev={() => setStep(2 )}
                     onClose={onCloseOrder}
+                    orderErrors={error}
+                    isLoading={isLoading}
                 />
             )
 

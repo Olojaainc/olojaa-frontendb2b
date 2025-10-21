@@ -5,9 +5,11 @@ import { startTransition, useActionState, useState } from "react";
 import { login } from "../Auth/actions";
 import { Alert } from "antd";
 import AuthLayout from "../Layouts/AuthLayout";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Signin() {
   const [state, action, pending] = useActionState(login, undefined);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formValues, setFormValues] = useState({
     name: "",
@@ -81,16 +83,25 @@ export default function Signin() {
                   {item.label}
                 </label>
                 <div className="mb-2">
-                  <div className="shadow-sm  items-center bg-white ">
+                  <div className="shadow-sm items-center bg-white relative">
                     <input
                       id={item.name}
                       name={item.name}
-                      type="text"
+                      type={item.name === "password" ? (showPassword ? "text" : "password") : "text"}
                       value={formValues[item.name as keyof typeof formValues]}
                       onChange={handleChange}
                       placeholder={item.placeholder}
-                      className=" grow py-1.5 pl-1 text-base rounded-xl w-[400px]   border border-[var(--gray-200)]  text-[var(--gray-700)] placeholder:text-[var(--gray-300)] focus:outline-none sm:text-sm/6"
+                      className="grow py-1.5 pl-1 pr-10 text-base rounded-xl w-[400px] border border-[var(--gray-200)] text-[var(--gray-700)] placeholder:text-[var(--gray-300)] focus:outline-none sm:text-sm/6"
                     />
+                    {item.name === "password" && (
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--gray-400)] hover:text-[var(--gray-600)]"
+                      >
+                        {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                      </button>
+                    )}
                   </div>
                 </div>
                 {item.error && (
@@ -112,7 +123,7 @@ export default function Signin() {
               </div>
             ))}
             <Link
-              href={"/forgotPassword"}
+              href={"/forgotpassword"}
               className="text-sm font-medium text-[var(--primary-400)]"
             >
               Forgot Password

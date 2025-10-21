@@ -2,7 +2,7 @@ import { Flex } from "antd";
 import { OrderStatus } from "../Types/Enums/OrderStatusEnum";
 import { GoDotFill } from "react-icons/go";
 
-export const StatusComponent = (status:string ) => {
+export const StatusComponent = (status?:string ) => {
 	switch (status) {
 	  case OrderStatus.pending:
 		return <Flex gap={'5px'} justify="flex-start" align="center" className="rounded-2xl w-[95px] h-5 bg-[var(--warning-75)] py-[2px] px-3 ">

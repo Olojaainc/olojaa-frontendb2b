@@ -7,6 +7,7 @@ const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
  
 export async function encrypt(payload: SessionPayload) {
+  console.log("Encrypting payload:", payload);
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -15,28 +16,32 @@ export async function encrypt(payload: SessionPayload) {
 }
  
 export async function decrypt(session: string | undefined = '') {
+  if (!session) return null;
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ['HS256'],
     })
     return payload
   } catch (error) {
-    console.log( error || 'Failed to verify session')
+    console.error("Session verification error:", error);
+    return null;
   }
 }
 
 export async function createSession(userId: string) {
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-    const session = await encrypt({ userId, expiresAt: Math.floor(expiresAt.getTime() / 1000) })
-    const cookieStore = await cookies()
-   
-    cookieStore.set('session', session, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      expires: expiresAt,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/',
-    })
+  console.log("Creating session for userId:", userId);
+  
+  const session = await encrypt({ userId });
+  console.log("Session created:", session);
+  
+  const cookieStore = await cookies();
+  cookieStore.set('session', session, {
+    httpOnly: true,
+    secure: true,
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    sameSite: 'none',
+    path: '/',
+  });
 }
 
 export async function setBearerToken(token: string){
