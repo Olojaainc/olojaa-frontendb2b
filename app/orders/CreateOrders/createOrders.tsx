@@ -1,11 +1,12 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Delivery from "./Delivery";
 import OrderDetails from "./OrderDetails";
 import { ApiErrorResponse, IOrderDetails } from "@/app/Types/Interfaces/IOrders";
 import { useFormik } from "formik";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import PaymentSummary from "./PaymentSummary";
+import { useCreateOrderMutation } from "@/app/Services/orders";
 
 interface ICreateOrder{
     isCreateOrder:boolean;
@@ -14,40 +15,41 @@ interface ICreateOrder{
 
 export default function CreateOrder({isCreateOrder, onCloseOrder}:ICreateOrder) {
   const [step, setStep] = useState(1);
-  const [errors, setError] = useState<ApiErrorResponse>();
-  const [isLoading, setLoading] = useState(false);
+  const [createOrder, { isLoading, error, data }] = useCreateOrderMutation();
+  // const [errors, setError] = useState<ApiErrorResponse>();
+  // const [isLoading, setLoading] = useState(false);
   
-  const createOrder = async (values:IOrderDetails) => {
-    try {
-      setLoading(true);
-      const res = await fetch('/api/create-order', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+  // const createOrder = async (values:IOrderDetails) => {
+  //   try {
+  //     setLoading(true);
+  //     const res = await fetch('/api/create-order', {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(values),
+  //     });
   
-      const data = await res.json();
+  //     const data = await res.json();
   
-      if (res.ok && data?.data?.authorization_url) {
-        console.log('Redirecting to:', data);
-        window.location.href = data.data.authorization_url;
-        return;
-      }
+  //     if (res.ok && data?.data?.authorization_url) {
+  //       console.log('Redirecting to:', data);
+  //       window.location.href = data.data.authorization_url;
+  //       return;
+  //     }
   
-      if (!res.ok) {
-        setError(data);
-      }
-    } catch (error: unknown) {
-      console.log('create orders error',error);
-      setError({
-        message: 'Network error. Please try again later.',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (!res.ok) {
+  //       setError(data);
+  //     }
+  //   } catch (error: unknown) {
+  //     console.log('create orders error',error);
+  //     setError({
+  //       message: 'Network error. Please try again later.',
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
 
   const formik = useFormik({
@@ -76,6 +78,12 @@ export default function CreateOrder({isCreateOrder, onCloseOrder}:ICreateOrder) 
     }
   });
 
+	useEffect(() => {
+		if (data?.data.authorization_url) {
+			window.location.href = data.data.authorization_url;
+		}
+	}, [data?.data.authorization_url]);
+
     return(
         <Dialog open={isCreateOrder} onOpenChange={onCloseOrder}>
             <DialogContent className="max-w-[600px] max-h-[700px] h-auto p-0 overflow-scroll hide-scrollbar ">
@@ -101,7 +109,7 @@ export default function CreateOrder({isCreateOrder, onCloseOrder}:ICreateOrder) 
                     formik={formik}
                     onPrev={() => setStep(2 )}
                     onClose={onCloseOrder}
-                    orderErrors={errors}
+                    orderErrors={error}
                     isLoading={isLoading}
                 />
             )

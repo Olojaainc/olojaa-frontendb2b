@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Order, ApiResponse, IOrderManagement } from '../Types/Interfaces/IOrders';
+import { Order, ApiResponse, IOrderManagement, IOrderBreakdown, IOrderDetails } from '../Types/Interfaces/IOrders';
 
 export const ordersApi = createApi({
   reducerPath: 'api',
@@ -25,9 +25,24 @@ export const ordersApi = createApi({
 
     getOrderManagement: builder.query<ApiResponse<IOrderManagement>, void>({
       query: () => 'business/order-management'
-    })
+    }),
+
+    getOrderBreakdown: builder.mutation<ApiResponse<IOrderBreakdown>, { gas_type_id: number; quantity: number }>({
+      query: (payload) => ({
+        url: 'business/order-breakdown',
+        method: 'POST',
+        body: payload
+      })
+    }),
+    createOrder: builder.mutation<ApiResponse<{ authorization_url: string; access_code: string; reference: string }>, IOrderDetails>({
+      query: (orderDetails) => ({
+        url: 'business/create-order',
+        method: 'POST',
+        body: orderDetails,
+      }),
+    }),
 
   }),
 });
 
-export const { useGetOrdersQuery, useGetOrderManagementQuery } = ordersApi;
+export const { useGetOrdersQuery, useGetOrderManagementQuery, useGetOrderBreakdownMutation, useCreateOrderMutation } = ordersApi;

@@ -19,7 +19,7 @@ export interface ITransactionMeta {
   }
   
   export interface IOrderDetails {
-    slug: string;
+    slug?: string;
     order_number: string;
     quantity: number;
     address: string;
