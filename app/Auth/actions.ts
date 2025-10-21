@@ -1,6 +1,7 @@
 'use server'
 import { SignupSchema, FormState, loginSchema, changePasswordSchema } from '@/app/Auth/_lib/definitions';
 import { createSession, deleteSession, setBearerToken } from '@/app/Auth/_lib/session';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { IChangePassword, ILoginDetails, IUserRegistration } from '../Types/Interfaces/IUser';
 
@@ -108,6 +109,8 @@ export async function changePassword(state: FormState, formData: IChangePassword
   
 }
 export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete('authToken');
   deleteSession()
   redirect('/signin');
 }

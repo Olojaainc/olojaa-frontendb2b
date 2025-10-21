@@ -7,6 +7,7 @@ import OrderManagement from "./Components/OrderManagement";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
 import { useGetTransactionsQuery } from "@/app/Services/transaction";
+import { useGetOrderManagementQuery } from "@/app/Services/orders";
 import { TransactionFilterType } from "@/app/Types/Interfaces/ITransactions";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,12 +23,18 @@ export default function Dashboard() {
         filter?: TransactionFilterType;
         from?: string;
         to?: string;
-    }>({ filter: "yesterday" });
+    }>({ filter: undefined });
 
 
     const { data: transactionsData, isLoading: isTransactionsLoading,
         isError:isTransactionsError, error: transactionsError 
-    } = useGetTransactionsQuery(transactionFilter);
+    } = useGetTransactionsQuery(transactionFilter, {skip: !transactionFilter});
+
+    const { data: orderManagementData, isLoading: isOrderManagementLoading,
+        isError: isOrderManagementError, error: orderManagementError 
+    } = useGetOrderManagementQuery();
+
+	
 
     useEffect(() => {
         if (isTransactionsError || transactionsError ) {
@@ -37,6 +44,15 @@ export default function Dashboard() {
             });
         }
     }, [isTransactionsError, transactionsError]);
+
+    useEffect(() => {
+        if (isOrderManagementError || orderManagementError ) {
+            const errorMessage = getErrorMessage(orderManagementError);
+            toast.error("Order Management Error!", {
+                description: errorMessage,
+            });
+        }
+    }, [isOrderManagementError, orderManagementError]);
     
     
     const handleCreateOrder = () => {
@@ -78,9 +94,9 @@ export default function Dashboard() {
            <div className="flex justify-between mb-4 gap-6">
                 <div className="flex flex-col items-start justify-between w-full h-[160px]  bg-white rounded-3xl py-4 px-3 shadow-sm">
                     <p className="text-xs mb-2 text-[var(--gray-600)]">Total Transactions</p>
-                    <p className="text-lg mb-2 font-semibold text-[var(--gray-900)]">
+                    <div className="text-lg mb-2 font-semibold text-[var(--gray-900)]">
                         {isTransactionsLoading ? <Skeleton className="h-4 w-12" />  : transactionsData?.meta.total_transactions || 0}
-                    </p>
+                    </div>
                     <div className="flex mb-2 items-center">
                         
                         <p  className={`custom-border font-medium rounded-xl py-[2px] px-[8px] text-sm mr-1 ${
@@ -114,7 +130,11 @@ export default function Dashboard() {
            <div className="bg-custom-radial flex items-center justify-between border-[0.5px] shadow-sm rounded-2xl px-3 py-4">
                 <div>
                     <p className="text-xs mb-2 text-[var(--gray-600)]">Total Orders</p>
-                    <p className="text-lg mb-2 font-semibold text-[var(--gray-900)]">50</p>
+                    <div className="text-lg mb-2 font-semibold text-[var(--gray-900)]">
+                        {isOrderManagementLoading ? <Skeleton className="h-4 w-12" /> : 
+                            (orderManagementData?.data?.totalOrders || 0)
+                        }
+                    </div>
                     <div className="flex mb-2 items-center">
                         
                         <p  className="custom-border bg-[#FBEAE9] text-[var(--error-400)] font-medium rounded-xl py-[2px] px-[8px] text-sm mr-1">-3%</p>

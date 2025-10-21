@@ -27,8 +27,8 @@ export default function Transactions() {
     const [selectedItem, setSelectedItem] = useState<ITransaction | null>(null)
     const {data, isError, error, isLoading} = useGetTransactionsQuery({});
     const {data:transactionBreakdown, error:transctionBreakdownError, isError:isTransactionBreakdownError, 
-        isLoading:isTransactionBreakdownloading} = useGetTransactionsBreakdownQuery()
-        console.log(transactionBreakdown);
+    isLoading:isTransactionBreakdownloading} = useGetTransactionsBreakdownQuery()
+       
 
     useEffect(() => {
             if ( isError || isTransactionBreakdownError && error || transctionBreakdownError) {
