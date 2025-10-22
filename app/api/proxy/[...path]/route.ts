@@ -1,3 +1,4 @@
+
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -43,9 +44,9 @@ async function proxyRequest(req: NextRequest, context: { params: Promise<{ path:
       status: response.status,
       headers: { 'Content-Type': response.headers.get('Content-Type') || 'application/json' },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     clearTimeout(timeoutId);
-    if (error.name === 'AbortError') {
+    if (error instanceof Error && error.name === 'AbortError') {
       return NextResponse.json({ status: false, message: 'Request timeout' }, { status: 408 });
     }
     return NextResponse.json({ status: false, message: 'Internal server error' }, { status: 500 });
