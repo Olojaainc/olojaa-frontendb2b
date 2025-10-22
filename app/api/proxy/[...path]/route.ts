@@ -1,3 +1,4 @@
+
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -11,7 +12,6 @@ async function proxyRequest(req: NextRequest, context: { params: Promise<{ path:
     return NextResponse.json({ status: false, message: 'Unauthorized' }, { status: 401 });
   }
 
-  // Await params before accessing its properties
   const params = await context.params;
   const herokuPath = params.path.join('/');
   const queryString = req.nextUrl.searchParams.toString();
@@ -25,18 +25,32 @@ async function proxyRequest(req: NextRequest, context: { params: Promise<{ path:
 
   const body = ['POST', 'PUT', 'PATCH'].includes(method) ? await req.text() : undefined;
 
-  const response = await fetch(targetUrl, {
-    method,
-    headers,
-    body,
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 25000);
 
-  const responseBody = await response.text();
+  try {
+    const response = await fetch(targetUrl, {
+      method,
+      headers,
+      body,
+      signal: controller.signal,
+    });
 
-  return new NextResponse(responseBody, {
-    status: response.status,
-    headers: { 'Content-Type': response.headers.get('Content-Type') || 'application/json' },
-  });
+    clearTimeout(timeoutId);
+
+    const responseBody = await response.text();
+
+    return new NextResponse(responseBody, {
+      status: response.status,
+      headers: { 'Content-Type': response.headers.get('Content-Type') || 'application/json' },
+    });
+  } catch (error: unknown) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error && error.name === 'AbortError') {
+      return NextResponse.json({ status: false, message: 'Request timeout' }, { status: 408 });
+    }
+    return NextResponse.json({ status: false, message: 'Internal server error' }, { status: 500 });
+  }
 }
 
 // Handle GET
