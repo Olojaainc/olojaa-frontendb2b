@@ -7,10 +7,10 @@ export const deliveriesApi = createApi({
     reducerPath: 'deliveriesApi',
     baseQuery: fetchBaseQuery({
       baseUrl: '/api/proxy',
-      credentials: 'include', 
+      credentials: 'include',
     }),
     endpoints: (builder) => ({
-  
+
       getDeliveries: builder.query<ApiResponse<Order[]>, void>({
         query: () => '/business/deliveries',
       }),
@@ -18,7 +18,7 @@ export const deliveriesApi = createApi({
       getDeliveryManagement: builder.query<ApiResponse<IDeliveryManagement>, void>({
         query: () => '/business/delivery-breakdown',
       })
-  
+
     }),
 });
 

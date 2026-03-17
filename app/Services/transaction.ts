@@ -7,14 +7,14 @@ export const transactionsApi = createApi({
     reducerPath: 'transactionsApi',
     baseQuery: fetchBaseQuery({
       baseUrl: '/api/proxy',
-      credentials: 'include', 
+      credentials: 'include',
     }),
     endpoints: (builder) => ({
-  
-      getTransactions: builder.query<ApiResponse<ITransaction[]>, { 
+
+      getTransactions: builder.query<ApiResponse<ITransaction[]>, {
         filter?: TransactionFilterType
-        from?: string; 
-        to?: string; 
+        from?: string;
+        to?: string;
       }>({
         query: ({ filter, from, to } = {}) => {
           const params = new URLSearchParams();
@@ -42,10 +42,14 @@ export const transactionsApi = createApi({
             url: 'business/create-dispute',
             method: 'POST',
             body: disputePayload
-          })
+          }),
+          transformErrorResponse: (response) => {
+            console.log('API Error - Unable to create dispute, please try again later:', response);
+            throw new Error('Unable to create dispute. Please check your connection and try again.');
+          }
       })
     }),
 });
 
-export const {useGetTransactionsQuery,useGetDisputeTypesQuery, 
+export const {useGetTransactionsQuery,useGetDisputeTypesQuery,
   useCreateDisputeMutation, useGetTransactionsBreakdownQuery} = transactionsApi

@@ -5,9 +5,9 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { IChangePassword, ILoginDetails, IUserRegistration } from '../Types/Interfaces/IUser';
 
- 
+
 export async function signup(state: FormState, formData: IUserRegistration) {
-  
+
 	const validatedFields = SignupSchema.safeParse(formData);
 
 	if (!validatedFields.success) {
@@ -18,7 +18,7 @@ export async function signup(state: FormState, formData: IUserRegistration) {
 
 	const res = await fetch(`${process.env.HEROKU_BASE_URL}/auth/register`, {
 	method: 'POST',
-	headers: { 
+	headers: {
 		'Content-Type': 'application/json',
 		'Accept': 'application/json'
 	},
@@ -46,39 +46,39 @@ export async function signup(state: FormState, formData: IUserRegistration) {
 
 	await createSession(user.data.slug);
 	redirect('/dashboard');
-  
+
 }
 
 export async function login(state: FormState, formData: ILoginDetails) {
 		const validatedFields = loginSchema.safeParse(formData);
-	
+
 		if (!validatedFields.success) {
 			return { errors: validatedFields.error.flatten().fieldErrors };
 		}
-	
+
 		const { email, password } = validatedFields.data;
-	
+
 		const res = await fetch(`${process.env.HEROKU_BASE_URL}/auth/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
 			body: JSON.stringify({ email, password }),
 		});
-	
+
 		const user = await res.json();
-	
+
 		if (!res.ok) {
 			return { message: user.message || 'Invalid credentials. Please try again.' };
 		}
-	
+
 		if (user.data.token) {
 			await setBearerToken(user.data.token);
 		}
-	
+
 		await createSession(user.data.slug);
-	
+
 		redirect('/dashboard');
   }
- 
+
 export async function changePassword(state: FormState, formData: IChangePassword) {
 	const validatedFields = changePasswordSchema.safeParse(formData);
 
@@ -92,7 +92,7 @@ export async function changePassword(state: FormState, formData: IChangePassword
 
 	const res = await fetch(`${process.env.HEROKU_BASE_URL}/change-password`, {
 		method: 'POST',
-		headers: { 
+		headers: {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json'
 		},
@@ -106,7 +106,7 @@ export async function changePassword(state: FormState, formData: IChangePassword
 			message: data.message || 'Unexpected error occurred. Please try again.',
 		};
 	}
-  
+
 }
 export async function logout() {
   const cookieStore = await cookies();
