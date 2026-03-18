@@ -3,7 +3,6 @@ import { orderConstant } from '../app/Constants/Orders'
 import { orderBreakdownConstant } from '../app/Constants/OrderBreakdowns'
 import { transactionConstant } from '../app/Constants/Transactions'
 import { DisputeTypesConstant } from '../app/Constants/DisputeTypes'
-import { userConstant } from '../app/Constants/Users'
 
 const BASE_URL = process.env.HEROKU_BASE_URL || process.env.NEXT_PUBLIC_HEROKU_BASE_URL || ''
 
@@ -36,26 +35,16 @@ export const handlers = [
   // Auth - Login
   http.post(`${BASE_URL}/auth/login`, async ({ request }) => {
     const body = await request.json() as { email: string; password: string }
-    const matchedUser = userConstant.find(
-      (u) => u.email === body.email && u.password === body.password
-    )
-
-    if (!matchedUser) {
-      return HttpResponse.json(
-        { status: false, message: 'Invalid credentials. Please try again.' },
-        { status: 401 }
-      )
-    }
-
-    const slug = matchedUser.name.toLowerCase().replace(/\s+/g, '-')
+    const name = body.email.split('@')[0].replace(/[._]/g, ' ')
+    const slug = name.toLowerCase().replace(/\s+/g, '-')
     return HttpResponse.json({
       status: true,
       message: 'Login successful',
       data: {
         slug,
         token: `mock-token-${slug}`,
-        name: matchedUser.name,
-        email: matchedUser.email,
+        name,
+        email: body.email,
       },
     })
   }),
