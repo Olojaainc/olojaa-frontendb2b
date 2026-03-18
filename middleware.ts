@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import jwt from 'jsonwebtoken';
+import { jwtVerify } from 'jose';
 
 const protectedRoutes = ['']
 const publicRoutes = ['/signin', '/signup', '/']
 
+const encodedKey = new TextEncoder().encode(process.env.SESSION_SECRET)
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
@@ -13,7 +14,12 @@ export default async function middleware(req: NextRequest) {
   const cookie = req.cookies.get("session")?.value
   let session: any = null;
   if (cookie) {
-    session = jwt.decode(cookie);
+    try {
+      const { payload } = await jwtVerify(cookie, encodedKey, { algorithms: ['HS256'] });
+      session = payload;
+    } catch {
+      session = null;
+    }
   }
 
   if (isProtectedRoute && !session?.userId) {
